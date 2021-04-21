@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, makeStyles } from '@material-ui/core';
 import Header from './components/Header';
-import ClientList from './components/ClientList';
+import ClientList from './components/ClientInfo/ClientList';
 import NavDrawer from '../../components/NavDrawer';
 
 const useStyles = makeStyles({
@@ -18,8 +18,6 @@ function SalesProfile() {
 
     return (
         <Grid container direction="row" className={classes.root}>
-            <NavDrawer/>
-
             <Grid container direction="column" className={classes.profile}>
                 <Header/>
 

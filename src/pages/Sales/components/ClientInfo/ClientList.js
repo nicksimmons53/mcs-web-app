@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchClients } from '../../../features/client/clientsSlice';
+import { fetchClients } from '../../../../features/client/clientsSlice';
 import ClientGrid from './ClientGrid';
 
 const useStyles = makeStyles({
@@ -109,6 +109,7 @@ function ClientList( ) {
             <Divider/>
 
             <Tabs centered value={tabValue} indicatorColor="secondary" onChange={handleTabChange}> 
+                <Tab label="Potential"/>
                 <Tab label="Queued"/>
                 <Tab label="Approved"/>
                 <Tab label="Active"/>

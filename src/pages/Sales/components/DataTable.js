@@ -7,7 +7,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow,
+    Typography
 } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -16,11 +17,17 @@ const useStyles = makeStyles({
         paddingLeft: 25,
         paddingRight: 25
     },
+    tableTitle: {
+        flex: '100%',
+        margin: 20,
+        marginBottom: 0
+    },
     headerText: {
         margin: 10,
         padding: 10
     },
     table: {
+        flex: 8,
         margin: 10
     },
     card: {
@@ -36,6 +43,12 @@ function DataTable(props) {
         <TableContainer component={Paper} variant="outlined" className={classes.table}>
             <Table>
                 <TableHead>
+                    {props.tableName && 
+                        <Typography className={classes.tableTitle} variant="h5">
+                            {props.tableName}
+                        </Typography>
+                    }
+                    
                     <TableRow>
                         {props.tableHead.map((cell, index) => (
                             <TableCell>{cell}</TableCell>
