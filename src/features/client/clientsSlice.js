@@ -197,7 +197,178 @@ let data = [
                 "optioned_area_out": "Test ",
                 "notes": "Test"
             }
-        }
+        },
+        "parts": [ 
+            [
+                [
+                    {
+                        "id": 78,
+                        "client_id": 70,
+                        "program": "tile",
+                        "programTable": "Floor Tile",
+                        "level": "1",
+                        "unit": "sqft",
+                        "price": null,
+                        "material": 1.280,
+                        "materialTax": 1.386,
+                        "labor": 1.000,
+                        "total": 2.386,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": null,
+                        "altered": null,
+                        "color": null,
+                        "description": null
+                    },
+                    {
+                        "id": 79,
+                        "client_id": 70,
+                        "program": "tile",
+                        "programTable": "Floor Tile",
+                        "level": "2",
+                        "unit": "sqft",
+                        "price": null,
+                        "material": 1.500,
+                        "materialTax": 1.624,
+                        "labor": 1.000,
+                        "total": 2.624,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": null,
+                        "altered": null,
+                        "color": null,
+                        "description": null
+                    }
+                ],
+                [
+                    {
+                        "id": 186,
+                        "client_id": 70,
+                        "program": "tile",
+                        "programTable": "Bathroom Wall Tile",
+                        "level": "1",
+                        "unit": "sqft",
+                        "price": null,
+                        "material": 1.022,
+                        "materialTax": 1.083,
+                        "labor": 1.000,
+                        "total": 2.083,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": null,
+                        "altered": null,
+                        "color": null,
+                        "description": null
+                    }
+                ],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            [
+                [
+                    {
+                        "id": 177,
+                        "client_id": 70,
+                        "program": "wood",
+                        "programTable": "Wood Flooring",
+                        "level": "1",
+                        "unit": "sqft",
+                        "price": null,
+                        "material": 1,
+                        "materialTax": 1.083,
+                        "labor": 1,
+                        "total": 2.083,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": null,
+                        "altered": null,
+                        "color": null,
+                        "description": null
+                    }
+                ],
+                []
+            ],
+            [
+                [],
+                []
+            ],
+            [
+                [],
+                [],
+                [
+                    {
+                        "id": 187,
+                        "client_id": 70,
+                        "program": "countertops",
+                        "programTable": "Level 1",
+                        "level": null,
+                        "unit": null,
+                        "price": null,
+                        "material": null,
+                        "materialTax": null,
+                        "labor": null,
+                        "total": 22,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": "Granite 2cm",
+                        "altered": null,
+                        "color": "Allure",
+                        "description": null
+                    }
+                ],
+                [],
+                [
+                    {
+                        "id": 188,
+                        "client_id": 70,
+                        "program": "countertops",
+                        "programTable": "Level 3",
+                        "level": null,
+                        "unit": null,
+                        "price": null,
+                        "material": null,
+                        "materialTax": null,
+                        "labor": null,
+                        "total": 11,
+                        "pattern": null,
+                        "sku": null,
+                        "install": null,
+                        "type": "Granite 2cm",
+                        "altered": null,
+                        "color": "Absolute Black",
+                        "description": null
+                    }
+                ],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ],
+            [
+                [],
+                []
+            ]
+        ],
     },
 ];
 

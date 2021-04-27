@@ -38,6 +38,18 @@ const useStyles = makeStyles({
 
 function DataTable(props) {
     const classes = useStyles( );
+
+    const RowNames = ({rowNames, index}) => {
+        if (props.partTables === true) 
+            return null;
+        if (props.rowNames.length !== 0) 
+            return <TableCell small>{rowNames[index]}</TableCell>;
+        return <TableCell small>{index + 1}</TableCell>;
+    }
+
+    const DataCell = ({row, cell}) => {
+        return <TableCell>{row[cell]}</TableCell>;
+    }
     
     return (
         <TableContainer component={Paper} variant="outlined" className={classes.table}>
@@ -58,23 +70,12 @@ function DataTable(props) {
 
                 <TableBody>
                     { props.tableBody.map((row, index) => (
-                        <TableRow>
-                            {props.rowNames.length !== 0 ? 
-                                <TableCell>{props.rowNames[index]}</TableCell>
-                                : 
-                                <TableCell>{index + 1}</TableCell>
-                            }
+                        <TableRow key={index} hover>
+                            <RowNames rowNames={props.rowNames} index={index}/> 
                             
-                            {Object.keys(row).map((cell, index) => {
-                                if (cell === "id")
-                                    return;
-                                else if (cell === "clientId")
-                                    return;
-                                else 
-                                    return (
-                                        <TableCell>{row[cell]}</TableCell>
-                                    )
-                            })}
+                            {Object.keys(row).map((cell, index) => (
+                                <DataCell key={index} row={row} cell={cell}/>
+                            ))}
                         </TableRow>
                     ))}
                 </TableBody>

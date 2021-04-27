@@ -18,3 +18,8 @@ export const formatTinyInt = (object) => {
 
     return object;
 }
+
+export const floatToCurrency = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+});

@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-    Card,
-    CardHeader,
     Divider,
     Grid,
     IconButton,
@@ -12,20 +10,9 @@ import {
     Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DataTable from '../DataTable';
-import MenuButton from '../../../../components/MenuButton';
-import { formatAddress, objectToArray, formatTinyInt } from '../../../../helpers/dataFormatter';
+import { formatTinyInt } from '../../../../helpers/dataFormatter';
 
-const addressColumnNames = ["Addresses", "Address 1", "Address 2", "City", "State", "Zip"];
-const addressRowNames = ["Corporate", "Billing", "Shipping"];
-const contactColumnNames = ["Contacts", "Name", "Title", "Email", "Phone"];
-const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices Submitted?","Invoice Email",
-    "Invoice Drop-Off Address", "Invoice Mail Address", "Payment Type",
-    "Payment Portal", "Payment Portal URL", "PO's Required?", "Are PO's Required for Invoice Submittal?",
-    "Approvals Required?", "Accounting Contact", "Contact Phone", "Contact Email", "Vendor Portal",
-    "Vendor Portal Username", "Vendor Portal Password", "How Are Jobs Released?", "Job Release Contact",
-    "PO Correction Handling?", "PO Correction Handling Email", "Expected Start Date", "Estimated Number of Homes"];
 const tileProgInfoRowNames = ["Floor Setting Material", "Setting Material Floors Product", "Wall Setting Material",
     "Setting Material Walls Product",  "Wall Setting Material Custom Choice",  "Floor Setting Material Custom Choice", 
     "Waterproofing Method - Shower Walls", "Waterproofing Method - Tub Wall", "Allotted Float", "Charge for Extra Float", "Waterproofing Method",
@@ -78,75 +65,6 @@ const useStyles = makeStyles({
     }
 });
 
-const GeneralInfo = ({address, contacts, changeView}) => {
-    const classes = useStyles( );
-    const cards  = ["Advanced Info.", "Program Info.", "Billing Parts"];
-
-    return (
-        <Grid container direction="column" alignItems="center" justify="center">
-            <Paper variant="outlined" className={classes.headerText}>
-                <Typography variant="h6">
-                    General Information
-                </Typography>
-            </Paper>
-    
-            <DataTable 
-                tableHead={addressColumnNames} 
-                tableBody={address} 
-                rowNames={addressRowNames}/>
-    
-            <DataTable
-                tableHead={contactColumnNames}
-                tableBody={contacts}
-                rowNames={[]}/>
-
-            <Grid container direction="row" className={classes.root}>
-                {cards.map((title, index) => (
-                    <Card className={classes.card} key={title}>
-                        <CardHeader
-                            title={title}
-                            action={
-                                <MenuButton 
-                                    menuItems={['Open', 'Export', 'Cancel']} 
-                                    menuFunctions={[( ) => changeView(index)]}
-                                    index={index}
-                                    icon={MoreVertIcon}/>
-                            }/>
-                    </Card>
-                ))}
-            </Grid>
-        </Grid>
-    )
-}
-
-const AdvancedInfo = ({advInfo, changeView}) => {
-    // Reformat Fields
-    let address = formatAddress([advInfo.invoice_addr, advInfo.invoice_city, advInfo.invoice_state, advInfo.invoice_zip]);
-    advInfo = formatTinyInt(advInfo);
-
-    // Reformat Advanced Info
-    let formattedAdvInfo = objectToArray(advInfo);
-    formattedAdvInfo.splice(4, 0, { invoice_addr: address });
-    formattedAdvInfo.splice(5, 4, { invoice_addr: address });
-
-    return (
-        <Grid alignItems="center" justify="center">
-            <Grid container alignItems="center">
-                <IconButton color="secondary" onClick={( ) => changeView(null)}>
-                    <ArrowBackIcon fontSize="large"/>
-                </IconButton>
-                <Typography color="secondary">Go Back</Typography>
-            </Grid>
-            <Divider/>
-
-            <DataTable 
-                tableHead={["Questions", "Responses"]} 
-                tableBody={formattedAdvInfo}
-                rowNames={advInfoColumnNames}/>
-        </Grid>
-    );
-}
-
 const ProgramInfo = ({programInfo, changeView}) => {
     const classes = useStyles( );
     const [ selectedIndex, setSelectedIndex ] = React.useState(0);
@@ -196,7 +114,7 @@ const ProgramInfo = ({programInfo, changeView}) => {
                 <Typography color="secondary">Go Back</Typography>
             </Grid>
 
-            <Divider/>
+            <Divider style={{margin: 10}}/>
 
             <Grid container direction="row">
                 <Paper variant="outline" className={classes.list}>
@@ -259,23 +177,4 @@ const ProgramInfo = ({programInfo, changeView}) => {
     );
 }
 
-const  BillingParts = ({changeView}) => {
-    return (
-        <Grid alignItems="center" justify="center">
-            <Grid container alignItems="center">
-                <IconButton color="secondary" onClick={( ) => changeView(null)}>
-                    <ArrowBackIcon fontSize="large"/>
-                </IconButton>
-                <Typography color="secondary">Go Back</Typography>
-            </Grid>
-            <Divider/>
-        </Grid>
-    );
-}
-
-export {
-    GeneralInfo,
-    AdvancedInfo,
-    ProgramInfo,
-    BillingParts
-};
+export default ProgramInfo;

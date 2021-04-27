@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
     Button, 
     Collapse,
     Grid,
     makeStyles
 } from '@material-ui/core';
-import { GeneralInfo, AdvancedInfo, ProgramInfo, BillingParts } from './ClientInfo';
+import GeneralInfo from './GeneralInfo';
+import AdvancedInfo from './AdvancedInfo';
+import ProgramInfo from './ProgramInfo';
+import BillingPartsInfo from './BillingPartsInfo';
+import Attachments from './Attachments';
 
 const useStyles = makeStyles({
     root: {
@@ -54,7 +58,11 @@ function ClientGrid(props) {
             </Collapse>
 
             <Collapse in={selectedView === 2}>
-                <BillingParts changeView={changeView}/>
+                <BillingPartsInfo parts={props.client.parts} changeView={changeView}/>
+            </Collapse>
+
+            <Collapse in={selectedView === 3}>
+                <Attachments changeView={changeView}/>
             </Collapse>
 
             <Grid container direction="row" justify="center" alignItems="center">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Grid, makeStyles } from '@material-ui/core';
 import Header from './components/Header';
-import ClientList from './components/ClientInfo/ClientList';
+import ClientList from './components/Client/ClientList';
 import NavDrawer from '../../components/NavDrawer';
 
 const useStyles = makeStyles({
