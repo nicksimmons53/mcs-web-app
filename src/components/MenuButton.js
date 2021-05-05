@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Button,
     Divider,
     IconButton,
     Menu,
@@ -37,10 +38,20 @@ const MenuButton = ({...props}) => {
 
     return (
         <div>
-            <IconButton onClick={handleClick}>
-                {<Icon color="primary"/>}
-            </IconButton>
+            {props.actionComp === "button" && 
+                <Button 
+                    variant="contained" 
+                    color="secondary"
+                    onClick={handleClick}>
+                    Actions
+                </Button>
+            }
 
+            {props.actionComp === "icon" &&
+                <IconButton onClick={handleClick}>
+                    {<Icon color="primary"/>}
+                </IconButton>
+            }
 
             <Menu
                 id="simple-menu"
