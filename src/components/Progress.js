@@ -14,10 +14,10 @@ const useStyles = makeStyles({
 
 function Progress({...props}) {
     const classes = useStyles();
-    
+
     return (
         <Grid container justify="center" alignItems="center" className={classes.root}>
-            <CircularProgress/> 
+            <CircularProgress color="secondary"/> 
         </Grid>
     );
 }
