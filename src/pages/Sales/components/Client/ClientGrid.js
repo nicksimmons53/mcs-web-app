@@ -1,15 +1,20 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import {
     Button, 
     Collapse,
+    Divider,
     Grid,
-    makeStyles
+    makeStyles,
+    Modal,
+    Typography
 } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearAddress, getClientById, getSelectedClient } from 'features/client/clientsSlice';
+import { reducers, getClientAddress, selectClientAddress } from 'features/client/clientsSlice';
 import GeneralInfo from './GeneralInfo';
 import AdvancedInfo from './AdvancedInfo';
 import ProgramInfo from './ProgramInfo';
 import BillingPartsInfo from './BillingPartsInfo';
-import Attachments from './Attachments';
 
 const useStyles = makeStyles({
     root: {
@@ -31,46 +36,25 @@ const useStyles = makeStyles({
 
 function ClientGrid(props) {
     const classes = useStyles();
+    const dispatch = useDispatch( );
     const [ selectedView, setSelectedView ] = React.useState(null);
 
     const changeView = (view) => { setSelectedView(view) }
 
-    const handleClientView = ( ) => {
-        props.handleClientView();
-        changeView(null);
-    }
-
     return (
-        <Grid direction="column" className={classes.root}>
+        <Grid container direction="column" className={classes.root}>
             <Collapse in={selectedView === null}>
-                <GeneralInfo 
-                    address={props.client.address} 
-                    contacts={props.client.contacts}
-                    changeView={changeView}/>
-            </Collapse>
-
-            <Collapse in={selectedView === 0}>
-                <AdvancedInfo advInfo={props.client.advInfo} changeView={changeView}/>
-            </Collapse>
-
-            <Collapse in={selectedView === 1}>
-                <ProgramInfo programInfo={props.client.programInfo} changeView={changeView}/>
-            </Collapse>
-
-            <Collapse in={selectedView === 2}>
-                <BillingPartsInfo parts={props.client.parts} changeView={changeView}/>
-            </Collapse>
-
-            <Collapse in={selectedView === 3}>
-                <Attachments changeView={changeView}/>
+                <GeneralInfo clientId={props.clientId} changeView={changeView}/>
             </Collapse>
 
             <Grid container direction="row" justify="center" alignItems="center">
                 <Button 
                     variant="contained" 
                     color="secondary" 
-                    onClick={handleClientView} 
-                    className={classes.collapseButton}>
+                    className={classes.collapseButton}
+                    onClick={( ) => {
+                        dispatch(props.hideClient( ));
+                    }}>
                     Collapse
                 </Button>
             </Grid>

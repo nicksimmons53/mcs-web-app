@@ -43,8 +43,8 @@ function DataTable(props) {
         if (props.partTables === true) 
             return null;
         if (props.rowNames.length !== 0) 
-            return <TableCell small>{rowNames[index]}</TableCell>;
-        return <TableCell small>{index + 1}</TableCell>;
+            return <TableCell size="small">{rowNames[index]}</TableCell>;
+        return <TableCell size="small">{index + 1}</TableCell>;
     }
 
     const DataCell = ({row, cell}) => {
@@ -63,7 +63,7 @@ function DataTable(props) {
                     
                     <TableRow>
                         {props.tableHead.map((cell, index) => (
-                            <TableCell>{cell}</TableCell>
+                            <TableCell key={index}>{cell}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Card,
     CardHeader,
@@ -8,12 +8,27 @@ import {
     Typography
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import DataTable from '../DataTable';
+import { useSelector, useDispatch } from 'react-redux';
+import { getClientContacts, selectClientContacts } from 'features/client/clientsSlice';
+import { getClientAddress, selectClientAddress } from 'features/client/clientsSlice';
+import { DataGrid } from '@material-ui/data-grid';
 import MenuButton from '../../../../components/MenuButton';
+import Progress from 'components/Progress';
 
-const addressColumnNames = ["Addresses", "Address 1", "Address 2", "City", "State", "Zip"];
-const addressRowNames = ["Corporate", "Billing", "Shipping"];
-const contactColumnNames = ["Contacts", "Name", "Title", "Email", "Phone"];
+const addressColumn = [
+    { field: 'location', headerName: 'Addresses', flex: 1 },
+    { field: 'addrs1', headerName: 'Street Address', flex: 1 },
+    { field: 'addrs2', headerName: 'Street Address 2', flex: 1 },
+    { field: 'city', headerName: 'City', flex: 1 },
+    { field: 'state', headerName: 'State', flex: 1 },
+    { field: 'zip', headerName: 'Zip Code', flex: 1 },
+];
+const contactColumn = [
+    { field: 'name', headerName: 'Name', flex: 1},
+    { field: 'title', headerName: 'Title', flex: 1},
+    { field: 'phone', headerName: 'Phone', flex: 1},
+    { field: 'email', headerName: 'Email', flex: 1},
+];
 
 const useStyles = makeStyles({
     card: {
@@ -36,23 +51,44 @@ const useStyles = makeStyles({
         color: '#FCFCFC'
     },
     root: {
-        flex: 1
+        flex: 1,
+        marginRight: 20
     },
     table: {
         borderWidth: 1,
         borderStyle: 'solid',
-        flex: 5
+        flex: 5,
+        marginRight: 20
     }
 });
 
-const GeneralInfo = ({address, contacts, changeView}) => {
+const GeneralInfo = ({...props}) => {
+    const dispatch = useDispatch( );
     const classes = useStyles( );
+    const [ show, setShow ] = React.useState(true);
     const cards  = ["Advanced Info.", "Program Info.", "Billing Parts", "Attachments"];
 
-    contacts.map((contact, index) => {
-        delete contact.id;
-        delete contact.clientId;
+    // Redux
+    const clientAddresses = useSelector(selectClientAddress);
+    const clientContacts = useSelector(selectClientContacts);
+    useEffect(( ) => {
+        if (clientAddresses.length === 0) {
+            dispatch(getClientAddress(props.clientId));
+            dispatch(getClientContacts(props.clientId));
+        }
     });
+
+    useEffect(( ) => {
+        const timeout = setTimeout(( ) => {
+            setShow(false);
+        }, 1500);
+
+        return ( ) => clearTimeout(timeout);
+    }, [ ]);
+
+    if (show === true) {
+        return <Progress linear/>
+    }
 
     return (
         <Grid container direction="column" alignItems="center" justify="center">
@@ -61,16 +97,22 @@ const GeneralInfo = ({address, contacts, changeView}) => {
                     General Information
                 </Typography>
             </Paper>
-    
-            <DataTable 
-                tableHead={addressColumnNames} 
-                tableBody={address} 
-                rowNames={addressRowNames}/>
-    
-            <DataTable
-                tableHead={contactColumnNames}
-                tableBody={contacts}
-                rowNames={[]}/>
+
+            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
+                <DataGrid
+                    autoHeight
+                    rows={clientAddresses}
+                    columns={addressColumn}
+                    pageSize={3}/>
+            </Card>
+
+            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
+                <DataGrid
+                    autoHeight
+                    rows={clientContacts}
+                    columns={contactColumn}
+                    pageSize={5}/>
+            </Card>
 
             <Grid container direction="row" className={classes.root}>
                 {cards.map((title, index) => (
@@ -80,15 +122,20 @@ const GeneralInfo = ({address, contacts, changeView}) => {
                             action={
                                 <MenuButton 
                                     menuItems={['Open', 'Export', 'Cancel']} 
-                                    menuFunctions={[( ) => changeView(index)]}
+                                    menuFunctions={[
+                                        ( ) => props.changeView(index),
+                                        ( ) => props.changeView(null),
+                                        ( ) => props.changeView(null)
+                                    ]}
                                     index={index}
-                                    icon={MoreVertIcon}/>
+                                    icon={MoreVertIcon}
+                                    actionComp="icon"/>
                             }/>
                     </Card>
                 ))}
             </Grid>
         </Grid>
-    )
+    );
 }
 
 export default GeneralInfo;

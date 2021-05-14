@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPotentialClients, selectAllClients } from 'features/client/clientsSlice';
+import { clearAddress, getClientAddress, getPotentialClients, selectAllClients, selectClientAddress, getClientById, selectClient, clearSelected } from 'features/client/clientsSlice';
 import MenuButton from '../../../../components/MenuButton';
 import ClientGrid from './ClientGrid';
 import Progress from 'components/Progress';
@@ -53,13 +53,12 @@ function ClientList( ) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
-    const [ clientView, setClientView ] = React.useState(false);
     const [ show, setShow ] = React.useState(true);
 
     useEffect(( ) => {
         const timeout = setTimeout(( ) => {
             setShow(false);
-        }, 2000);
+        }, 1500);
 
         return ( ) => clearTimeout(timeout);
     }, [ ]);
@@ -67,29 +66,25 @@ function ClientList( ) {
     // Redux Data
     const clientStatus = useSelector(state => state.clients.status);
     const clients = useSelector(selectAllClients);
-    useEffect(( ) => {
-        if (clientStatus === 'idle' && tabValue === 0) {
-            dispatch(fetchPotentialClients( ));
+    
+    useEffect(async ( ) => {
+        if (clientStatus === 'idle') {
+            dispatch(getPotentialClients( ));
         }
     }, [ clientStatus, dispatch ]);
 
-    const handleClientView = (event) => { setClientView((prev) => !prev) }
-
-    const handleTabChange = (event, newValue) => {
-        setClientView(false);
-
-        setTabValue(newValue);
-    }
+    const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
     const ClientList = ({ clients }) => {
+        const [ clientIndex, setClientIndex ] = React.useState(null);
         const [ pageNum, setPageNum ] = React.useState(1);
         const [ viewableClients, setViewableClients ] = React.useState(clients.slice(0, 14));
 
-        const handlePageChange = (event, value) => {
-            setPageNum(value);
+        const retrievedClient = useSelector(selectClient);
 
-            setViewableClients(clients.slice((value - 1) * 15, (value - 1) * 15 + 14));
-        }
+        const handlePageChange = (event, value) => { setPageNum(value) }
+
+        const retrieveClient = async (id) => { await dispatch(getClientById(id)) }
         
         return (
             <List className={classes.clientList}>
@@ -109,16 +104,25 @@ function ClientList( ) {
                                 "Export",
                                 "Cancel"
                             ]}
-                            menuFunctions={[handleClientView]}
+                            menuFunctions={[
+                                ( ) => retrieveClient(client.id)
+                            ]}
                             index={index}
                             actionComp="button"/>
                     </ListItem>
+                    
+                    { retrievedClient.basicInfo !== null && retrievedClient.basicInfo.id === client.id ?
+                        <Collapse in={retrievedClient.basicInfo.id === client.id}>
+                            <Divider/>
 
-                    <Collapse in={clientView}>
-                        <Divider/>
-                    </Collapse>
+                            <ClientGrid clientId={retrievedClient.basicInfo.id} hideClient={clearSelected}/>
+                        </Collapse>
+                        :
+                        null
+                    }
 
                     <Divider/>
+
                     </>
                 ))}
 

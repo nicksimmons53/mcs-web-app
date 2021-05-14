@@ -1,4 +1,4 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import logo from '../../../assets/logo.png';
 
