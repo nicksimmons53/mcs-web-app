@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
+    Button,
     Card,
     CardHeader,
     Divider,
@@ -13,9 +14,11 @@ import {
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { useDispatch, useSelector } from 'react-redux';
+import { getClientInfo, selectClientInfo } from 'features/client/clientsSlice';
 import DataTable from '../DataTable';
 import MenuButton from '../../../../components/MenuButton';
-import { formatAddress, objectToArray, formatTinyInt, floatToCurrency } from '../../../../helpers/dataFormatter';
+import Progress from 'components/Progress';
 
 const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices Submitted?","Invoice Email",
     "Invoice Drop-Off Address", "Invoice Mail Address", "Payment Type",
@@ -24,31 +27,42 @@ const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices S
     "Vendor Portal Username", "Vendor Portal Password", "How Are Jobs Released?", "Job Release Contact",
     "PO Correction Handling?", "PO Correction Handling Email", "Expected Start Date", "Estimated Number of Homes"];
     
-const AdvancedInfo = ({advInfo, changeView}) => {
-    // Reformat Fields
-    let address = formatAddress([advInfo.invoice_addr, advInfo.invoice_city, advInfo.invoice_state, advInfo.invoice_zip]);
-    advInfo = formatTinyInt(advInfo);
+const AdvancedInfo = ({...props}) => {
+    const dispatch = useDispatch( );
 
-    // Reformat Advanced Info
-    let formattedAdvInfo = objectToArray(advInfo);
-    formattedAdvInfo.splice(4, 0, { invoice_addr: address });
-    formattedAdvInfo.splice(5, 4, { invoice_addr: address });
+    // Redux
+    const infoStatus = useSelector(state => state.clients.clientStatus.advancedInfo);
+    const info = useSelector(selectClientInfo);
 
-    return (
-        <Grid alignItems="center" justify="center">
-            <Grid container alignItems="center">
-                <IconButton color="secondary" onClick={( ) => changeView(null)}>
-                    <ArrowBackIcon fontSize="large"/>
-                </IconButton>
-                <Typography color="secondary">Go Back</Typography>
-            </Grid>
-            
-            <Divider style={{margin: 10}}/>
+    useEffect(( ) => {
+        if (infoStatus === 'idle') {
+            dispatch(getClientInfo(props.clientId));
+        }
+    }, [ dispatch ]);
 
+    let renderedContent;
+    if (infoStatus === 'loading') {
+        renderedContent = <Progress/>;
+    } else if (infoStatus === 'succeeded') {
+        renderedContent = (
             <DataTable 
                 tableHead={["Questions", "Responses"]} 
-                tableBody={formattedAdvInfo}
+                tableBody={info}
                 rowNames={advInfoColumnNames}/>
+        );
+    }
+
+    return (
+        <Grid container direction="column" alignItems="center" justify="center">
+            <Divider style={{margin: 10, marginLeft: 30}}/>
+
+            {renderedContent}
+            
+            <Grid container alignItems="center" justify="center">
+                <Button variant="contained" color="secondary" onClick={( ) => props.changeView(0)}>
+                    Client Home
+                </Button>
+            </Grid>
         </Grid>
     );
 }

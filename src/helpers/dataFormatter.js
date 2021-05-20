@@ -1,4 +1,8 @@
 export const formatAddress = (address) => {
+    if (address[0] === null || address[0] === '') {
+        return '';
+    }
+
     address.filter(lineItem => lineItem);
 
     return address.join(', ');

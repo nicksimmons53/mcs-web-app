@@ -8,13 +8,12 @@ import {
     Modal,
     Typography
 } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import { clearAddress, getClientById, getSelectedClient } from 'features/client/clientsSlice';
-import { reducers, getClientAddress, selectClientAddress } from 'features/client/clientsSlice';
 import GeneralInfo from './GeneralInfo';
 import AdvancedInfo from './AdvancedInfo';
 import ProgramInfo from './ProgramInfo';
 import BillingPartsInfo from './BillingPartsInfo';
+import Progress from 'components/Progress';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
     root: {
@@ -26,6 +25,10 @@ const useStyles = makeStyles({
     table: {
         margin: 10
     },
+    headerText: {
+        margin: 10,
+        marginBottom: 20
+    },
     collapseButton: {
         height: 45,
         margin: 20,
@@ -35,30 +38,52 @@ const useStyles = makeStyles({
 
 
 function ClientGrid(props) {
-    const classes = useStyles();
     const dispatch = useDispatch( );
-    const [ selectedView, setSelectedView ] = React.useState(null);
+    const classes = useStyles();
+    const [ selectedView, setSelectedView ] = React.useState(0);
+    const [ show, setShow ] = React.useState(true);
+
+    useEffect(( ) => {
+        const timeout = setTimeout(( ) => {
+            setShow(false);
+        }, 1000);
+
+        return ( ) => clearTimeout(timeout);
+    }, [ ]);
 
     const changeView = (view) => { setSelectedView(view) }
 
     return (
-        <Grid container direction="column" className={classes.root}>
-            <Collapse in={selectedView === null}>
-                <GeneralInfo clientId={props.clientId} changeView={changeView}/>
-            </Collapse>
+        <Collapse in={show === false}>
+            <Grid container direction="column" alignItems="center" className={classes.root}>
+                <Typography variant="h5" className={classes.headerText}>
+                    {props.client.clnnme}
+                </Typography>
 
-            <Grid container direction="row" justify="center" alignItems="center">
-                <Button 
-                    variant="contained" 
-                    color="secondary" 
-                    className={classes.collapseButton}
-                    onClick={( ) => {
-                        dispatch(props.hideClient( ));
-                    }}>
-                    Collapse
-                </Button>
+                <Collapse in={selectedView === 0}>
+                    <GeneralInfo clientId={props.clientId} changeView={changeView}/>
+                </Collapse>
+                
+                <Collapse in={selectedView === 1}>
+                    <AdvancedInfo clientId={props.clientId} changeView={changeView}/>
+                </Collapse>
+
+                { selectedView === 0 &&
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Button 
+                            variant="contained" 
+                            color="secondary" 
+                            className={classes.collapseButton}
+                            onClick={( ) => {
+                                setShow(true);
+                                dispatch(props.hideClient( ))
+                            }}>
+                            Client List
+                        </Button>
+                    </Grid>
+                }
             </Grid>
-        </Grid>
+        </Collapse>
     );
 }
 

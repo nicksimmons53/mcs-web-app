@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import {
     Card,
     CardHeader,
+    Collapse,
+    Divider,
     Grid,
     makeStyles,
     Paper,
@@ -37,6 +39,7 @@ const useStyles = makeStyles({
     },
     headerText: {
         margin: 10,
+        marginRight: 30,
         padding: 10
     },
     list: {
@@ -53,66 +56,50 @@ const useStyles = makeStyles({
     root: {
         flex: 1,
         marginRight: 20
-    },
-    table: {
-        borderWidth: 1,
-        borderStyle: 'solid',
-        flex: 5,
-        marginRight: 20
     }
 });
 
 const GeneralInfo = ({...props}) => {
     const dispatch = useDispatch( );
     const classes = useStyles( );
-    const [ show, setShow ] = React.useState(true);
+    const tableColumns = [addressColumn, contactColumn];
     const cards  = ["Advanced Info.", "Program Info.", "Billing Parts", "Attachments"];
 
     // Redux
+    const addressStatus = useSelector(state => state.clients.clientStatus.addresses);
+    const contactStatus = useSelector(state => state.clients.clientStatus.contacts);
     const clientAddresses = useSelector(selectClientAddress);
     const clientContacts = useSelector(selectClientContacts);
+    
     useEffect(( ) => {
-        if (clientAddresses.length === 0) {
+        if (addressStatus === 'idle' && clientAddresses.length === 0) {
             dispatch(getClientAddress(props.clientId));
+        }
+
+        if (contactStatus === 'idle' && clientContacts.length === 0) {
             dispatch(getClientContacts(props.clientId));
         }
-    });
+    }, [ addressStatus, contactStatus, dispatch ]);
 
-    useEffect(( ) => {
-        const timeout = setTimeout(( ) => {
-            setShow(false);
-        }, 1500);
 
-        return ( ) => clearTimeout(timeout);
-    }, [ ]);
-
-    if (show === true) {
-        return <Progress linear/>
+    let renderedContent;
+    if (addressStatus === 'loading' || contactStatus === 'loading') {
+        renderedContent = <Progress/>;
+    } else if (addressStatus === 'succeeded' && contactStatus === 'succeeded') {
+        renderedContent = [clientAddresses, clientContacts].map((info, index) => (
+            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
+                <DataGrid
+                    autoHeight
+                    rows={info}
+                    columns={tableColumns[index]}
+                    pageSize={3}/>
+            </Card>
+        ));
     }
 
     return (
         <Grid container direction="column" alignItems="center" justify="center">
-            <Paper variant="outlined" className={classes.headerText}>
-                <Typography variant="h6">
-                    General Information
-                </Typography>
-            </Paper>
-
-            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
-                <DataGrid
-                    autoHeight
-                    rows={clientAddresses}
-                    columns={addressColumn}
-                    pageSize={3}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
-                <DataGrid
-                    autoHeight
-                    rows={clientContacts}
-                    columns={contactColumn}
-                    pageSize={5}/>
-            </Card>
+            {renderedContent}
 
             <Grid container direction="row" className={classes.root}>
                 {cards.map((title, index) => (
@@ -123,7 +110,7 @@ const GeneralInfo = ({...props}) => {
                                 <MenuButton 
                                     menuItems={['Open', 'Export', 'Cancel']} 
                                     menuFunctions={[
-                                        ( ) => props.changeView(index),
+                                        ( ) => props.changeView(index + 1),
                                         ( ) => props.changeView(null),
                                         ( ) => props.changeView(null)
                                     ]}

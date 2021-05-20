@@ -2,6 +2,7 @@ import {
     createAsyncThunk,
     createSlice
 } from '@reduxjs/toolkit';
+import { formatAddress, objectToArray, formatTinyInt, floatToCurrency } from 'helpers/dataFormatter';
 
 export const getPotentialClients = createAsyncThunk(
     'clients/potential', 
@@ -12,7 +13,7 @@ export const getPotentialClients = createAsyncThunk(
 );
 
 export const getClientById = createAsyncThunk(
-    'clients/selected',
+    'clients/selected/basicInfo',
     async (id) => {
         return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}`)
             .then((res) => res.json( ));
@@ -28,9 +29,17 @@ export const getClientAddress = createAsyncThunk(
 );
 
 export const getClientContacts = createAsyncThunk(
-    'clients/contacts',
+    'clients/selected/contacts',
     async (id) => {
         return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/contacts`)
+            .then((res) => res.json( ));
+    }
+);
+
+export const getClientInfo = createAsyncThunk(
+    'clients/selected/advancedInfo',
+    async (id) => {
+        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/advanced-info`)
             .then((res) => res.json( ));
     }
 );
@@ -41,19 +50,40 @@ const clientsSlice = createSlice({
         potential: [],
         status: 'idle',
         error: null,
+        clientStatus: {
+            addresses: 'idle',
+            contacts: 'idle',
+            advancedInfo: 'idle'
+        },
         selected: {
-            basicInfo: null,
+            id: null,
+            advancedInfo: [],
             addresses: [],
             contacts: []
         }
-
     },
     reducers: {
-        clearSelected(state) {
-            state.selected.basicInfo = null;
-            state.selected.addresses = [ ];
-            state.selected.clients = [ ];
+        setSelectedClientId(state, { payload }) {
+            state.selected.id = payload;
         },
+        resetState(state) {
+            Object.assign(state, {
+                potential: [],
+                status: 'idle',
+                error: null,
+                clientStatus: {
+                    addresses: 'idle',
+                    contacts: 'idle',
+                    advancedInfo: 'idle'
+                },
+                selected: {
+                    id: null,
+                    advancedInfo: [],
+                    addresses: [],
+                    contacts: []
+                }
+            });
+        }
     },
     extraReducers: {
         [getPotentialClients.pending]: (state, action) => {
@@ -79,7 +109,7 @@ const clientsSlice = createSlice({
             state.error = action.error.message;
         },
         [getClientAddress.pending]: (state, action) => {
-            state.status = 'idle';
+            state.clientStatus.addresses = 'loading';
         },
         [getClientAddress.fulfilled]: (state, { payload }) => {
             let formattedAddresses = [
@@ -112,22 +142,42 @@ const clientsSlice = createSlice({
                 }
             ];
             
-            state.status = 'succeeded';
+            state.clientStatus.addresses = 'succeeded';
             state.selected.addresses = formattedAddresses;
         },
         [getClientAddress.rejected]: (state, action) => {
-            state.status = 'failed';
+            state.clientStatus.addresses = 'failed';
             state.error = action.error.message;
         },
         [getClientContacts.pending]: (state, action) => {
-            state.status = 'idle';
+            state.clientStatus.contacts = 'loading';
         },
         [getClientContacts.fulfilled]: (state, { payload }) => {
-            state.status = 'succeeded';
+            state.clientStatus.contacts = 'succeeded';
             state.selected.contacts = payload;
         },
         [getClientContacts.rejected]: (state, action) => {
-            state.status = 'failed';
+            state.clientStatus.contacts = 'failed';
+            state.error = action.error.message;
+        },
+        [getClientInfo.pending]: (state, action) => {
+            state.clientStatus.advancedInfo = 'idle';
+        },
+        [getClientInfo.fulfilled]: (state, { payload }) => {   
+            let clientInfo = payload[0]; 
+            let address = formatAddress([clientInfo.invoice_addr, clientInfo.invoice_city, clientInfo.invoice_state, clientInfo.invoice_zip]);
+            clientInfo = formatTinyInt(clientInfo);
+
+            let formattedInfo = objectToArray(clientInfo);
+            formattedInfo.splice(0, 2);
+            formattedInfo.splice(4, 4, { invoice_addr: address });
+            formattedInfo.splice(5, 0, { invoice_addr: address });
+
+            state.clientStatus.advancedInfo = 'succeeded';
+            state.selected.advancedInfo = formattedInfo;
+        },
+        [getClientInfo.rejected]: (state, action) => {
+            state.clientStatus.advancedInfo = 'failed';
             state.error = action.error.message;
         },
     }
@@ -135,12 +185,14 @@ const clientsSlice = createSlice({
 
 export const selectAllClients = state => state.clients;
 
-export const selectClient = state => state.clients.selected;
+export const selectedClientId = state => state.clients.selected.id;
+
+export const selectClientInfo = state => state.clients.selected.advancedInfo;
 
 export const selectClientAddress = state => state.clients.selected.addresses;
 
 export const selectClientContacts = state => state.clients.selected.contacts;
 
-export const { clearSelected } = clientsSlice.actions;
+export const { setSelectedClientId, resetState } = clientsSlice.actions;
 
 export default clientsSlice.reducer; 

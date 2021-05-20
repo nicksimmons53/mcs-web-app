@@ -13,7 +13,9 @@ import {
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearAddress, getClientAddress, getPotentialClients, selectAllClients, selectClientAddress, getClientById, selectClient, clearSelected } from 'features/client/clientsSlice';
+import { getPotentialClients, selectAllClients } from 'features/client/clientsSlice';
+import { selectedClientId, setSelectedClientId } from 'features/client/clientsSlice';
+import { resetState } from 'features/client/clientsSlice';
 import MenuButton from '../../../../components/MenuButton';
 import ClientGrid from './ClientGrid';
 import Progress from 'components/Progress';
@@ -76,64 +78,66 @@ function ClientList( ) {
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
     const ClientList = ({ clients }) => {
-        const [ clientIndex, setClientIndex ] = React.useState(null);
         const [ pageNum, setPageNum ] = React.useState(1);
         const [ viewableClients, setViewableClients ] = React.useState(clients.slice(0, 14));
 
-        const retrievedClient = useSelector(selectClient);
+        // Redux
+        const clientId = useSelector(selectedClientId);
 
-        const handlePageChange = (event, value) => { setPageNum(value) }
+        const handlePageChange = (event, value) => { 
+            setPageNum(value);
+            setViewableClients(clients.slice((value - 1) * 15, (value * 15) - 1));
+        }
 
-        const retrieveClient = async (id) => { await dispatch(getClientById(id)) }
-        
-        return (
-            <List className={classes.clientList}>
-                {viewableClients.map((client, index) => (
-                    <>
-                    <ListItem key={index}>
-                        <Divider/>
+        if (clientId === null) {
+            return (
+                <Collapse in={clientId === null}>
+                    <List className={classes.clientList}>
+                        {viewableClients.map((client, index) => (
+                            <>
+                            <ListItem key={index}>
+                                <Divider/>
 
-                        <ListItemText>{client.clnnme} - {client.fstnme} {client.lstnme}</ListItemText>
+                                <ListItemText>{client.clnnme} - {client.fstnme} {client.lstnme}</ListItemText>
 
-                        <MenuButton
-                            menuItems={[
-                                "View", 
-                                "Message Sales Rep.",
-                                "Approve",
-                                "Decline",
-                                "Export",
-                                "Cancel"
-                            ]}
-                            menuFunctions={[
-                                ( ) => retrieveClient(client.id)
-                            ]}
-                            index={index}
-                            actionComp="button"/>
-                    </ListItem>
-                    
-                    { retrievedClient.basicInfo !== null && retrievedClient.basicInfo.id === client.id ?
-                        <Collapse in={retrievedClient.basicInfo.id === client.id}>
+                                <MenuButton
+                                    menuItems={[
+                                        "View", 
+                                        "Message Sales Rep.",
+                                        "Approve",
+                                        "Decline",
+                                        "Export",
+                                        "Cancel"
+                                    ]}
+                                    menuFunctions={[
+                                        ( ) => dispatch(setSelectedClientId(client.id))
+                                    ]}
+                                    index={index}
+                                    actionComp="button"/>
+                            </ListItem>
+
                             <Divider/>
 
-                            <ClientGrid clientId={retrievedClient.basicInfo.id} hideClient={clearSelected}/>
-                        </Collapse>
-                        :
-                        null
-                    }
+                            </>
+                        ))}
 
-                    <Divider/>
-
-                    </>
-                ))}
-
-                <Pagination 
-                    page={pageNum}
-                    count={parseInt(clients.length / 15) + 1} 
-                    shape="rounded"
-                    onChange={handlePageChange}
-                    className={classes.pagination}/>
-            </List>
-        );
+                        <Pagination 
+                            page={pageNum}
+                            count={parseInt(clients.length / 15) + 1} 
+                            shape="rounded"
+                            onChange={handlePageChange}
+                            className={classes.pagination}/>
+                    </List>
+                </Collapse>
+            );
+        } else {
+            return (
+                <ClientGrid 
+                    client={clients.find(client => client.id === clientId)}
+                    clientId={clientId} 
+                    hideClient={( ) => dispatch(resetState( ))}/>
+            );
+        }
     }
 
     return (
