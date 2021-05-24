@@ -12,12 +12,9 @@ import {
     Paper,
     Typography
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClientInfo, selectClientInfo } from 'features/client/clientsSlice';
 import DataTable from '../DataTable';
-import MenuButton from '../../../../components/MenuButton';
 import Progress from 'components/Progress';
 
 const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices Submitted?","Invoice Email",
@@ -59,7 +56,11 @@ const AdvancedInfo = ({...props}) => {
             {renderedContent}
             
             <Grid container alignItems="center" justify="center">
-                <Button variant="contained" color="secondary" onClick={( ) => props.changeView(0)}>
+                <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    onClick={( ) => props.changeView(0)}
+                    style={{margin: 30, width: 250}}>
                     Client Home
                 </Button>
             </Grid>

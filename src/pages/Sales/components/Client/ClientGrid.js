@@ -27,7 +27,8 @@ const useStyles = makeStyles({
     },
     headerText: {
         margin: 10,
-        marginBottom: 20
+        marginBottom: 20,
+        textAlign: 'center'
     },
     collapseButton: {
         height: 45,
@@ -55,7 +56,7 @@ function ClientGrid(props) {
 
     return (
         <Collapse in={show === false}>
-            <Grid container direction="column" alignItems="center" className={classes.root}>
+            <Grid container direction="column" className={classes.root}>
                 <Typography variant="h5" className={classes.headerText}>
                     {props.client.clnnme}
                 </Typography>
@@ -68,8 +69,16 @@ function ClientGrid(props) {
                     <AdvancedInfo clientId={props.clientId} changeView={changeView}/>
                 </Collapse>
 
+                <Collapse in={selectedView === 2}>
+                    <ProgramInfo clientId={props.clientId} changeView={changeView}/>
+                </Collapse>
+
+                <Collapse in={selectedView === 3}>
+                    <BillingPartsInfo clientId={props.clientId} changeView={changeView}/>
+                </Collapse>
+
                 { selectedView === 0 &&
-                    <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid container direction="column" justify="center" alignItems="center">
                         <Button 
                             variant="contained" 
                             color="secondary" 

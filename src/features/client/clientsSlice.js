@@ -44,6 +44,14 @@ export const getClientInfo = createAsyncThunk(
     }
 );
 
+export const getClientPrograms = createAsyncThunk(
+    'clients/selected/program',
+    async (id) => {
+        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/programs`)
+            .then((res) => res.json( ));
+    }
+);
+
 const clientsSlice = createSlice({
     name: 'clients',
     initialState: {
@@ -53,13 +61,15 @@ const clientsSlice = createSlice({
         clientStatus: {
             addresses: 'idle',
             contacts: 'idle',
-            advancedInfo: 'idle'
+            advancedInfo: 'idle',
+            programs: 'idle'
         },
         selected: {
             id: null,
             advancedInfo: [],
             addresses: [],
-            contacts: []
+            contacts: [],
+            programs: []
         }
     },
     reducers: {
@@ -74,13 +84,15 @@ const clientsSlice = createSlice({
                 clientStatus: {
                     addresses: 'idle',
                     contacts: 'idle',
-                    advancedInfo: 'idle'
+                    advancedInfo: 'idle',
+                    programs: 'idle'
                 },
                 selected: {
                     id: null,
                     advancedInfo: [],
                     addresses: [],
-                    contacts: []
+                    contacts: [],
+                    programs: []
                 }
             });
         }
@@ -161,7 +173,7 @@ const clientsSlice = createSlice({
             state.error = action.error.message;
         },
         [getClientInfo.pending]: (state, action) => {
-            state.clientStatus.advancedInfo = 'idle';
+            state.clientStatus.advancedInfo = 'loading';
         },
         [getClientInfo.fulfilled]: (state, { payload }) => {   
             let clientInfo = payload[0]; 
@@ -180,6 +192,29 @@ const clientsSlice = createSlice({
             state.clientStatus.advancedInfo = 'failed';
             state.error = action.error.message;
         },
+        [getClientPrograms.pending]: (state, action) => {
+            state.clientStatus.programs = 'loading';
+        },
+        [getClientPrograms.fulfilled]: (state, { payload }) => { 
+            let formattedInfo = [ ];
+            payload.map((program, index) => {
+                if (program === null) {
+                    formattedInfo.push([ ]);
+                } else {
+                    delete program.id;
+                    delete program.client_id;
+                    formatTinyInt(program);
+                    formattedInfo.push(Object.entries(program).map(([k, v]) => ({ [k] : v })));
+                }
+            });
+
+            state.clientStatus.programs = 'succeeded';
+            state.selected.programs = formattedInfo;
+        },
+        [getClientPrograms.rejected]: (state, action) => {
+            state.clientStatus.programs = 'failed';
+            state.error = action.error.message;
+        },
     }
 });
 
@@ -192,6 +227,8 @@ export const selectClientInfo = state => state.clients.selected.advancedInfo;
 export const selectClientAddress = state => state.clients.selected.addresses;
 
 export const selectClientContacts = state => state.clients.selected.contacts;
+
+export const selectClientPrograms = state => state.clients.selected.programs;
 
 export const { setSelectedClientId, resetState } = clientsSlice.actions;
 
