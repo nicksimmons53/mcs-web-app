@@ -80,14 +80,14 @@ function ClientList( ) {
 
     const ClientList = ({ clients }) => {
         const [ pageNum, setPageNum ] = React.useState(1);
-        const [ viewableClients, setViewableClients ] = React.useState(clients.slice(0, 14));
+        const [ viewableClients, setViewableClients ] = React.useState(clients.slice(0, 15));
 
         // Redux
         const clientId = useSelector(selectedClientId);
 
         const handlePageChange = (event, value) => { 
             setPageNum(value);
-            setViewableClients(clients.slice((value - 1) * 15, (value * 15) - 1));
+            setViewableClients(clients.slice((value - 1) * 16, (value * 16) - 1));
         }
 
         if (clientId === null) {
