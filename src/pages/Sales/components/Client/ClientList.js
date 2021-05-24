@@ -55,6 +55,7 @@ function ClientList( ) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
+    const [ showTabs, setShowTabs ] = React.useState(true);
     const [ show, setShow ] = React.useState(true);
 
     useEffect(( ) => {
@@ -90,6 +91,8 @@ function ClientList( ) {
         }
 
         if (clientId === null) {
+            setShowTabs(true);
+
             return (
                 <Collapse in={clientId === null}>
                     <List className={classes.clientList}>
@@ -131,6 +134,8 @@ function ClientList( ) {
                 </Collapse>
             );
         } else {
+            setShowTabs(false);
+
             return (
                 <ClientGrid 
                     client={clients.find(client => client.id === clientId)}
@@ -141,25 +146,27 @@ function ClientList( ) {
     }
 
     return (
-        <Grid container className={classes.root} direction="column">
-            <Grid container direction="row" alignItems="center" justify="center">
-                <Typography>
-                </Typography>
-                <Typography variant="h4" align="center" className={classes.text1}>
-                    Client List
-                </Typography>
-            </Grid>
+        <Grid container className={classes.root} direction="column">       
+            <Collapse in={showTabs}>
+                <Grid container direction="row" alignItems="center" justify="center">
+                    <Typography>
+                    </Typography>
+                    <Typography variant="h4" align="center" className={classes.text1}>
+                        Client List
+                    </Typography>
+                </Grid>
 
-            <Divider/>
+                <Divider/>
 
-            <Tabs centered value={tabValue} indicatorColor="secondary" onChange={handleTabChange}> 
-                <Tab label="Potential"/>
-                <Tab label="Queued"/>
-                <Tab label="Approved"/>
-                <Tab label="Active"/>
-            </Tabs>
+                <Tabs centered value={tabValue} indicatorColor="secondary" onChange={handleTabChange}> 
+                    <Tab label="Potential"/>
+                    <Tab label="Queued"/>
+                    <Tab label="Approved"/>
+                    <Tab label="Active"/>
+                </Tabs>
 
-            <Divider/>
+                <Divider/>
+            </Collapse>
 
             { show === true && <Progress/>}
             

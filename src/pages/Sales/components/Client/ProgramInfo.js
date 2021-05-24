@@ -5,7 +5,8 @@ import {
     Grid,
     makeStyles,
     Tab,
-    Tabs
+    Tabs,
+    Typography
 } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { getClientPrograms, selectClientPrograms } from 'features/client/clientsSlice';
@@ -78,8 +79,6 @@ const ProgramInfo = ({...props}) => {
         }
     }, [ dispatch ]);
 
-    console.log(programs[4])
-
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
     let renderedContent;
@@ -126,6 +125,8 @@ const ProgramInfo = ({...props}) => {
         <Grid alignItems="center" justify="center">
             <Divider style={{marginBottom: 10}}/>
 
+            <Typography variant="h6" align="center">Program Information</Typography>
+
             <Grid container direction="column" alignItems="center">
                 <Tabs value={tabValue} indicatorColor="secondary" onChange={handleTabChange}>
                     <Tab label="Tile"/>
@@ -137,6 +138,8 @@ const ProgramInfo = ({...props}) => {
 
                 {renderedContent}
             </Grid>
+
+            <Divider style={{marginTop: 50}}/>
             
             <Grid container alignItems="center" justify="center">
                 <Button 

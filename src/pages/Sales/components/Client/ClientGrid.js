@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     collapseButton: {
         height: 45,
         margin: 20,
-        minWidth: 200
+        minWidth: 300
     }
 });
 

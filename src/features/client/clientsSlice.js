@@ -2,6 +2,7 @@ import {
     createAsyncThunk,
     createSlice
 } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import { formatAddress, objectToArray, formatTinyInt, floatToCurrency } from 'helpers/dataFormatter';
 
 export const getPotentialClients = createAsyncThunk(
@@ -52,6 +53,14 @@ export const getClientPrograms = createAsyncThunk(
     }
 );
 
+export const getClientParts = createAsyncThunk(
+    'clients/selected/parts',
+    async (id) => {
+        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/parts`)
+            .then((res) => res.json( ));
+    }
+)
+
 const clientsSlice = createSlice({
     name: 'clients',
     initialState: {
@@ -62,14 +71,16 @@ const clientsSlice = createSlice({
             addresses: 'idle',
             contacts: 'idle',
             advancedInfo: 'idle',
-            programs: 'idle'
+            programs: 'idle',
+            parts: 'idle'
         },
         selected: {
             id: null,
             advancedInfo: [],
             addresses: [],
             contacts: [],
-            programs: []
+            programs: [],
+            parts: []
         }
     },
     reducers: {
@@ -85,14 +96,16 @@ const clientsSlice = createSlice({
                     addresses: 'idle',
                     contacts: 'idle',
                     advancedInfo: 'idle',
-                    programs: 'idle'
+                    programs: 'idle',
+                    parts: 'idle'
                 },
                 selected: {
                     id: null,
                     advancedInfo: [],
                     addresses: [],
                     contacts: [],
-                    programs: []
+                    programs: [],
+                    parts: []
                 }
             });
         }
@@ -215,6 +228,24 @@ const clientsSlice = createSlice({
             state.clientStatus.programs = 'failed';
             state.error = action.error.message;
         },
+        [getClientParts.pending]: (state, action) => {
+            state.clientStatus.parts = 'loading';
+        },
+        [getClientParts.fulfilled]: (state, { payload }) => { 
+            let formattedInfo = [ ];
+            formattedInfo.push(_.groupBy(payload[0], 'programTable'));
+            formattedInfo.push(_.groupBy(payload[1], 'programTable'));
+            formattedInfo.push(_.groupBy(payload[2], 'programTable'));
+            formattedInfo.push(_.groupBy(payload[3], 'programTable'));
+            formattedInfo.push(_.groupBy(payload[4], 'programTable'));
+
+            state.clientStatus.parts = 'succeeded';
+            state.selected.parts = formattedInfo;
+        },
+        [getClientParts.rejected]: (state, action) => {
+            state.clientStatus.parts = 'failed';
+            state.error = action.error.message;
+        },
     }
 });
 
@@ -229,6 +260,8 @@ export const selectClientAddress = state => state.clients.selected.addresses;
 export const selectClientContacts = state => state.clients.selected.contacts;
 
 export const selectClientPrograms = state => state.clients.selected.programs;
+
+export const selectClientParts = state => state.clients.selected.parts;
 
 export const { setSelectedClientId, resetState } = clientsSlice.actions;
 

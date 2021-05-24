@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
+    Button,
     Card,
     Divider,
     Grid,
-    IconButton,
-    List,
-    ListItem,
     makeStyles,
-    Paper,
+    Tab,
+    Tabs,
     Typography
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useSelector, useDispatch } from 'react-redux';
+import { getClientParts, selectClientParts } from 'features/client/clientsSlice';
+import _ from 'lodash';
+import Progress from 'components/Progress';
 
 const fullColumn = [
     { field: 'level', headerName: 'Level', flex: 1 },
@@ -60,396 +62,195 @@ const typeColorTotalColumn = [
     { field: 'total', headerName: 'Total', flex: 1}
 ];
 
-const useStyles = makeStyles({
-    list: {
-        flex: 1,
-        margin: 10,
-        paddingTop: 0
-    }, 
-    listHeader: {
-        backgroundColor: '#1C1F33',
-        borderTopLeftRadius: 2,
-        borderTopRightRadius: 2,
-        color: '#FCFCFC'
+const BillingPartsInfo = ({...props}) => {
+    const dispatch = useDispatch();
+    const [ tabValue, setTabValue ] = React.useState(0);
+    
+    const carpetColumns = {
+        'Carpet Flooring': fullColumn, 
+        'Carpet Pad': levelUnitTotalColumn
+    };
+
+    const countertopColumns = {
+        'Edges': typeTotalColumn, 
+        'Sinks/Shape': descTotalColumn,  
+        'Level 1': typeColorTotalColumn,
+        'Level 2': typeColorTotalColumn,  
+        'Level 3': typeColorTotalColumn,  
+        'Level 4': typeColorTotalColumn,
+        'Level 5': typeColorTotalColumn,  
+        'Level 6': typeColorTotalColumn,  
+        'Level 7': typeColorTotalColumn,
+        'Level 8': typeColorTotalColumn,  
+        'Level 9': typeColorTotalColumn,  
+        'Level 10': typeColorTotalColumn,
+    };
+
+    const tileColumns = {
+        'Floor Tile': fullColumn, 
+        'Bathroom Wall Tile': fullColumn, 
+        'Backsplash Wall Tile': fullColumn, 
+        'Fireplace Wall Tile': fullColumn, 
+        'Floor Stone': fullColumn, 
+        'Bathroom Wall Stone': fullColumn,
+        'Backsplash Wall Stone': fullColumn, 
+        'Fireplace Wall Stone': fullColumn, 
+        'Shower Pans - Stone': levelTotalColumn, 
+        'Shower Pans - Tile': levelTotalColumn, 
+        'Shower Pans - Deco': levelTotalColumn,
+        'Underlayment': descTotalColumn, 
+        'Pattern Charges': descTotalColumn, 
+        'Accents': descTotalColumn, 
+        'Shower Seats': descUnitTotalColumn,
+        'Add-Ons': descUnitTotalColumn
+    };
+
+    const vinylColumns = {
+        'Vinyl Plank': fullColumn,
+        'Vinyl Sheet': fullColumn
+    };
+
+    const woodColumns = {
+        'Wood Flooring': fullColumn,
+        'Underlayment': descTotalColumn
+    };
+
+    // Redux
+    const partStatus = useSelector(state => state.clients.clientStatus.parts);
+    const parts = useSelector(selectClientParts);
+    useEffect(( ) => {
+        if (partStatus === 'idle') {
+            dispatch(getClientParts(props.clientId));
+        }
+    }, [ dispatch ]);
+
+    const handleTabChange = (event, newValue) => { setTabValue(newValue) }
+
+    let renderedContent;
+    if (partStatus === 'loading') {
+        return <Progress/>;
+    } else if (partStatus === 'succeeded') {
+        renderedContent = (
+            <>
+                { tabValue === 0 &&
+                    <Grid direction="column" style={{flex: 5}}>
+                        {
+                            Object.keys(parts[2]).map((table, index) => (
+                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <DataGrid 
+                                        autoHeight
+                                        rows={parts[2][table]} 
+                                        columns={Object.values(_.pick(carpetColumns, table))[0]} 
+                                        pageSize={10}/>
+                                </Card>
+                            ))
+                        }
+                    </Grid>
+                }
+
+                { tabValue === 1 &&
+                    <Grid direction="column" style={{flex: 5}}>
+                        {
+                            Object.keys(parts[3]).map((table, index) => (
+                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <DataGrid 
+                                        autoHeight
+                                        rows={parts[3][table]} 
+                                        columns={Object.values(_.pick(countertopColumns, table))[0]} 
+                                        pageSize={10}/>
+                                </Card>
+                            ))
+                        }
+                    </Grid>
+                }
+
+                { tabValue === 2 &&
+                    <Grid direction="column" style={{flex: 5}}>
+                        {
+                            Object.keys(parts[0]).map((table, index) => (
+                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <DataGrid 
+                                        autoHeight
+                                        rows={parts[0][table]} 
+                                        columns={Object.values(_.pick(tileColumns, table))[0]} 
+                                        pageSize={10}/>
+                                </Card>
+                            ))
+                        }
+                    </Grid>
+                }
+
+                { tabValue === 3 &&
+                    <Grid direction="column" style={{flex: 5}}>
+                        {
+                            Object.keys(parts[4]).map((table, index) => (
+                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <DataGrid 
+                                        autoHeight
+                                        rows={parts[4][table]} 
+                                        columns={Object.values(_.pick(vinylColumns, table))[0]} 
+                                        pageSize={10}/>
+                                </Card>
+                            ))
+                        }
+                    </Grid>
+                }
+
+                { tabValue === 4 &&
+                    <Grid direction="column" style={{flex: 5}}>
+                        {
+                            Object.keys(parts[1]).map((table, index) => (
+                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <DataGrid 
+                                        autoHeight
+                                        rows={parts[1][table]} 
+                                        columns={Object.values(_.pick(woodColumns, table))[0]} 
+                                        pageSize={10}/>
+                                </Card>
+                            ))
+                        }
+                    </Grid>
+                }
+            </>
+        );
     }
-});
-
-const BillingPartsInfo = ({parts, changeView}) => {
-    const classes = useStyles();
-    const [ selectedIndex, setSelectedIndex ] = React.useState(0);
-    const programs = ['Carpet', 'Countertops', 'Tile', 'Vinyl', 'Wood'];
-
-    let tileParts = parts[0];
-    let woodParts = parts[1];
-    let carpetParts = parts[2];
-    let countertopParts = parts[3];
-    let vinylParts = parts[4];
-
-    const handleListItemClick = (event, index) => { setSelectedIndex(index) }
-
-    const CarpetTables = ( ) => (
-        <Grid direction="column" style={{flex: 5}}>
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Carpet Flooring</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={carpetParts[0]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Carpet Pad</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={carpetParts[1]} 
-                    columns={levelUnitTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-        </Grid>
-    );
-
-    const CountertopTables = ( ) => (
-        <Grid direction="column" style={{flex: 5}}>
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Edges</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[0]} 
-                    columns={typeTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Sinks</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[1]} 
-                    columns={descTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 1</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[2]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 2</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[3]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 3</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[4]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 4</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[5]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 5</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[6]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 6</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[7]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 7</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[8]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 8</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={countertopParts[9]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 9</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[10]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Level 10</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[11]} 
-                    columns={typeColorTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-        </Grid>
-    )
-
-    const TileTables = ( ) => (
-        <Grid direction="column" style={{flex: 5}}>
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Floor Tile</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[0]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Bathroom Wall Tile</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[1]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Backsplash Wall Tile</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[2]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Fireplace Wall Tile</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[3]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Floor Stone</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[4]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Bathroom Wall Stone</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[5]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Backsplash Wall Stone</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[6]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Fireplace Wall Stone</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[7]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Shower Pans - Stone</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[8]} 
-                    columns={levelTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Shower Pans - Tile</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[9]} 
-                    columns={levelTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Shower Pans - Deco</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[10]} 
-                    columns={levelTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Underlayment</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[11]} 
-                    columns={descTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Pattern Charges</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[12]} 
-                    columns={patternTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Accents</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[13]} 
-                    columns={patternTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Shower Seats</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[14]} 
-                    columns={descUnitTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Add-Ons</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={tileParts[15]} 
-                    columns={descUnitTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-        </Grid>
-    );
-
-    const VinylTables = ( ) => (
-        <Grid direction="column" style={{flex: 5}}>
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Vinyl Flooring</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={vinylParts[0]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Vinyl Sheet</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={vinylParts[1]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-        </Grid>
-    )
-
-    const WoodTables = ( ) => (
-        <Grid direction="column" style={{flex: 5}}>
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Wood Flooring</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={woodParts[0]} 
-                    columns={fullColumn} 
-                    pageSize={10}/>
-            </Card>
-
-            <Card raised style={{marginBottom: 10, marginTop: 10}}>
-                <Typography variant="h5" align="center" style={{margin:10}}>Underlayment</Typography>
-                <DataGrid 
-                    autoHeight
-                    rows={woodParts[1]} 
-                    columns={descTotalColumn} 
-                    pageSize={10}/>
-            </Card>
-        </Grid>
-    );
 
     return (
         <Grid alignItems="center" justify="center">
-            <Grid container alignItems="center">
-                <IconButton color="secondary" onClick={( ) => changeView(null)}>
-                    <ArrowBackIcon fontSize="large"/>
-                </IconButton>
-                <Typography color="secondary">Go Back</Typography>
+            <Divider style={{marginBottom: 10}}/>
+
+            <Typography variant="h6" align="center">Billing Parts</Typography>
+
+            <Grid container direction="column" alignItems="center">
+                <Tabs value={tabValue} indicatorColor="secondary" onChange={handleTabChange}>
+                    <Tab label="Carpet"/>
+                    <Tab label="Countertop"/>
+                    <Tab label="Tile"/>
+                    <Tab label="Vinyl"/>
+                    <Tab label="Wood"/>
+                </Tabs>
             </Grid>
 
-            <Divider style={{margin: 10}}/>
+            {renderedContent}
 
-            <Grid container direction="row">
-                <Paper variant="outline" className={classes.list}>
-                    <List disablePadding> 
-                        <ListItem className={classes.listHeader} divider>Programs</ListItem>
-                        
-                        {programs.map((program, index) => (
-                            <ListItem 
-                                button 
-                                selected={selectedIndex === index} 
-                                onClick={(event) => handleListItemClick(event, index)}
-                                key={program}>
-                                {program}
-                            </ListItem>
-                        ))}
-                    </List>
-                </Paper>
-
-                { selectedIndex === 0 && <CarpetTables/> }
-
-                { selectedIndex === 1 && <CountertopTables/> }
-
-                { selectedIndex === 2 && <TileTables/> }
-
-                { selectedIndex === 3 && <VinylTables/> }
-
-                { selectedIndex === 4 && <WoodTables/> }
+            <Divider style={{marginTop: 50}}/>
+            
+            <Grid container alignItems="center" justify="center">
+                <Button 
+                    variant="contained" 
+                    color="secondary" 
+                    onClick={( ) => {
+                        props.changeView(0);
+                        setTabValue(0);
+                    }}
+                    style={{margin: 30, width: 250}}>
+                    Client Home
+                </Button>
             </Grid>
         </Grid>
     );
