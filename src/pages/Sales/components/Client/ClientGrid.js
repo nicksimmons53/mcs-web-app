@@ -2,17 +2,15 @@ import React, { Suspense, useEffect } from 'react';
 import {
     Button, 
     Collapse,
-    Divider,
     Grid,
     makeStyles,
-    Modal,
     Typography
 } from '@material-ui/core';
 import GeneralInfo from './GeneralInfo';
 import AdvancedInfo from './AdvancedInfo';
 import ProgramInfo from './ProgramInfo';
 import BillingPartsInfo from './BillingPartsInfo';
-import Progress from 'components/Progress';
+import Attachments from './Attachments';
 import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
@@ -75,6 +73,10 @@ function ClientGrid(props) {
 
                 <Collapse in={selectedView === 3}>
                     <BillingPartsInfo clientId={props.clientId} changeView={changeView}/>
+                </Collapse>
+
+                <Collapse in={selectedView === 4}>
+                    <Attachments clientId={props.clientId} changeView={changeView}/>
                 </Collapse>
 
                 { selectedView === 0 &&
