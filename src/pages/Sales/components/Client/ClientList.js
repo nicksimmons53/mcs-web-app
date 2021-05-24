@@ -88,6 +88,7 @@ function ClientList( ) {
         const handlePageChange = (event, value) => { 
             setPageNum(value);
             setViewableClients(clients.slice((value - 1) * 16, (value * 16) - 1));
+            window.scrollTo(0, 0);
         }
 
         if (clientId === null) {
