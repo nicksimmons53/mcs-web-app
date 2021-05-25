@@ -19,8 +19,13 @@ const MenuButton = ({...props}) => {
     }
 
     const handleMenuItemClick = (action) => {
+        if (typeof(action) === "function") {
+            handleClose( );
+            action( );
+            return;
+        }
+
         handleClose( );
-        action( );
     }
 
     const Icon = props.icon;
@@ -28,8 +33,10 @@ const MenuButton = ({...props}) => {
     const ListItems = ( ) => props.menuItems.map((option, optionIndex) => (
         <>
             <MenuItem onClick={( ) => {
-                handleMenuItemClick(props.menuFunctions[optionIndex])
-                }}>
+                if (props.menuFunctions[optionIndex] === null) {
+                    handleMenuItemClick( );
+                }
+                handleMenuItemClick(props.menuFunctions[optionIndex])}}>
                 {option}
             </MenuItem>
             {optionIndex === props.menuItems.length - 2 && <Divider/>}
@@ -49,7 +56,7 @@ const MenuButton = ({...props}) => {
 
             {props.actionComp === "icon" &&
                 <IconButton onClick={handleClick}>
-                    {<Icon color="primary"/>}
+                    {<Icon fontSize="large" color="secondary"/>}
                 </IconButton>
             }
 

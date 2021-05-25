@@ -1,17 +1,20 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
     Button, 
     Collapse,
     Grid,
+    IconButton,
     makeStyles,
     Typography
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import { useDispatch } from 'react-redux';
 import GeneralInfo from './GeneralInfo';
 import AdvancedInfo from './AdvancedInfo';
 import ProgramInfo from './ProgramInfo';
 import BillingPartsInfo from './BillingPartsInfo';
 import Attachments from './Attachments';
-import { useDispatch } from 'react-redux';
+import MenuButton from '../../../../components/MenuButton';
 
 const useStyles = makeStyles({
     root: {
@@ -55,9 +58,23 @@ function ClientGrid(props) {
     return (
         <Collapse in={show === false}>
             <Grid container direction="column" className={classes.root}>
-                <Typography variant="h4" className={classes.headerText}>
-                    {props.client.clnnme}
-                </Typography>
+                <Grid container direction="row" justify="space-between">
+                    <Typography></Typography>
+                    <Typography variant="h4" className={classes.headerText}>
+                        {props.client.clnnme}
+                    </Typography>
+                    <MenuButton
+                        menuItems={[
+                            'Message Sales Rep.',
+                            'Approve',
+                            'Decline',
+                            'Export',
+                            'Cancel'
+                        ]}
+                        menuFunctions={[]}
+                        actionComp="icon"
+                        icon={MenuIcon}/>
+                </Grid>
 
                 <Collapse in={selectedView === 0}>
                     <GeneralInfo clientId={props.clientId} changeView={changeView}/>
