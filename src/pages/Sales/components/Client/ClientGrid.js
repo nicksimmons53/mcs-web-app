@@ -3,8 +3,8 @@ import {
     Button, 
     Collapse,
     Grid,
-    IconButton,
     makeStyles,
+    Modal,
     Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -17,6 +17,22 @@ import Attachments from './Attachments';
 import MenuButton from '../../../../components/MenuButton';
 
 const useStyles = makeStyles({
+    collapseButton: {
+        height: 45,
+        margin: 20,
+        minWidth: 300
+    },
+    headerText: {
+        margin: 10,
+        marginBottom: 20,
+        textAlign: 'center'
+    },
+    modal: {
+        alignItems: 'center',
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'center',
+    },
     root: {
         flex: 1,
         padding: 10,
@@ -25,16 +41,6 @@ const useStyles = makeStyles({
     },
     table: {
         margin: 10
-    },
-    headerText: {
-        margin: 10,
-        marginBottom: 20,
-        textAlign: 'center'
-    },
-    collapseButton: {
-        height: 45,
-        margin: 20,
-        minWidth: 300
     }
 });
 
@@ -76,7 +82,7 @@ function ClientGrid(props) {
                         icon={MenuIcon}/>
                 </Grid>
 
-                <Collapse in={selectedView === 0}>
+                <Collapse in={selectedView === 0 || selectedView === 4}>
                     <GeneralInfo clientId={props.clientId} changeView={changeView}/>
                 </Collapse>
                 
@@ -92,9 +98,12 @@ function ClientGrid(props) {
                     <BillingPartsInfo clientId={props.clientId} changeView={changeView}/>
                 </Collapse>
 
-                <Collapse in={selectedView === 4}>
+                <Modal 
+                    open={selectedView === 4} 
+                    onClose={( ) => changeView(0)}
+                    className={classes.modal}>
                     <Attachments clientId={props.clientId} changeView={changeView}/>
-                </Collapse>
+                </Modal>
 
                 { selectedView === 0 &&
                     <Grid container direction="column" justify="center" alignItems="center">
