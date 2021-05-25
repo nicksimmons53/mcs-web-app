@@ -136,7 +136,9 @@ const ProgramInfo = ({...props}) => {
                     <Tab label="Cabinets"/>
                 </Tabs>
 
-                {renderedContent}
+                <Grid container direction="column" alignContent="center">
+                    {renderedContent}
+                </Grid>
             </Grid>
 
             <Divider style={{marginTop: 50}}/>

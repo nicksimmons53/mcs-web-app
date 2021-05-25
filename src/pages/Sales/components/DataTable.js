@@ -29,10 +29,6 @@ const useStyles = makeStyles({
     table: {
         flex: 8,
         margin: 10
-    },
-    card: {
-        flex: 1,
-        margin: 10
     }
 });
 

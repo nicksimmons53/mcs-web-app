@@ -50,10 +50,16 @@ const AdvancedInfo = ({...props}) => {
     }
 
     return (
-        <Grid container direction="column" alignItems="center" justify="center">
-            <Divider style={{margin: 10, marginLeft: 30}}/>
+        <Grid alignContent="center" justify="center">
+            <Divider style={{marginBottom: 10}}/>
 
-            {renderedContent}
+            <Typography variant="h6" align="center">Advanced Information</Typography>
+
+            <Grid container direction="column" alignContent="center">
+                {renderedContent}
+            </Grid>
+
+            <Divider style={{marginTop: 50}}/>
             
             <Grid container alignItems="center" justify="center">
                 <Button 
