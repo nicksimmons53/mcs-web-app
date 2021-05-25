@@ -55,7 +55,7 @@ function ClientGrid(props) {
     return (
         <Collapse in={show === false}>
             <Grid container direction="column" className={classes.root}>
-                <Typography variant="h5" className={classes.headerText}>
+                <Typography variant="h4" className={classes.headerText}>
                     {props.client.clnnme}
                 </Typography>
 
