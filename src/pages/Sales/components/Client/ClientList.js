@@ -114,7 +114,12 @@ function ClientList( ) {
                                         "Cancel"
                                     ]}
                                     menuFunctions={[
-                                        ( ) => dispatch(setSelectedClientId(client.id))
+                                        ( ) => dispatch(setSelectedClientId(client.id)),
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
                                     ]}
                                     index={index}
                                     actionComp="button"/>

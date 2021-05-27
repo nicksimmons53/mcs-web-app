@@ -33,7 +33,6 @@ const AdvancedInfo = ({...props}) => {
     if (infoStatus === 'loading') {
         renderedContent = <Progress/>;
     } else if (infoStatus === 'succeeded') {
-        console.log("MOUNTED")
         renderedContent = (
             <DataTable 
                 tableHead={["Questions", "Responses"]} 
