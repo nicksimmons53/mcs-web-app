@@ -29,7 +29,8 @@ const Attachments = ({...props}) => {
         { id: 'id'},
         { field: 'name', headerName: 'File Name', flex: 1 },
         { field: 'type', headerName: 'File Type', flex: 1 },
-        { field: 'LastModified', headerName: 'Upload Date', flex: 1 },
+        { field: 'time', headerName: 'Upload Time', flex: 1},
+        { field: 'date', headerName: 'Upload Date', flex: 1 },
         { 
             field: 'action', 
             headerName: ' ',

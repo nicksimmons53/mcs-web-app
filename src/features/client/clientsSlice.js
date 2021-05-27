@@ -272,6 +272,10 @@ const clientsSlice = createSlice({
                 file.name = file.Key.split('/')[1];
                 file.type = file.name.split('.')[1];
 
+                let date = new Date(file.LastModified);
+                file.date = `${date.getMonth( )}/${date.getDate( )}/${date.getFullYear( )}`;
+                file.time = `${date.getHours( )}:${date.getMinutes( )}`
+
                 formattedInfo.push(file);
             });
 
