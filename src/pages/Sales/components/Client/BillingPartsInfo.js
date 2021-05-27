@@ -14,53 +14,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getClientParts, selectClientParts } from 'features/client/clientsSlice';
 import _ from 'lodash';
 import Progress from 'components/Progress';
-
-const fullColumn = [
-    { field: 'level', headerName: 'Level', flex: 1 },
-    { field: 'unit', headerName: 'Unit', flex: 1 },
-    { field: 'material', headerName: 'Material', flex: 1 },
-    { field: 'materialTax', headerName: 'Material w/ Tax', flex: 1 },
-    { field: 'labor', headerName: 'Labor', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1 }
-];
-
-const descTotalColumn = [
-    { field: 'description', headerName: 'Description', flex: 1 },
-    { field: 'total', headerName: 'Cost per SqFt', flex: 1 }
-];
-
-const levelTotalColumn = [
-    { field: 'level', headerName: 'Level', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1 }
-];
-
-const patternTotalColumn = [
-    { field: 'pattern', headerName: 'Pattern', flex: 1 },
-    { field: 'total', headerName: 'Cost per SqFt', flex: 1 }
-];
-
-const descUnitTotalColumn = [
-    { field: 'description', headerName: 'Description', flex: 1 },
-    { field: 'unit', headerName: 'Unit', flex: 1 },
-    { field: 'total', headerName: 'Cost', flex: 1}
-];
-
-const levelUnitTotalColumn = [
-    { field: 'level', headerName: 'Level', flex: 1 },
-    { field: 'unit', headerName: 'Unit', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1}
-];
-
-const typeTotalColumn = [
-    { field: 'type', headerName: 'Type', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1}
-];
-
-const typeColorTotalColumn = [
-    { field: 'type', headerName: 'Type', flex: 1 },
-    { field: 'color', headerName: 'Color', flex: 1 },
-    { field: 'total', headerName: 'Total', flex: 1}
-];
+import { 
+    fullColumn, descTotalColumn, levelTotalColumn, descUnitTotalColumn, 
+    levelUnitTotalColumn, typeTotalColumn, typeColorTotalColumn,
+} from '../../static_data';
 
 const BillingPartsInfo = ({...props}) => {
     const dispatch = useDispatch();

@@ -2,12 +2,8 @@ import React, { useEffect } from 'react';
 import {
     Card,
     CardHeader,
-    Collapse,
-    Divider,
     Grid,
-    makeStyles,
-    Paper,
-    Typography
+    makeStyles
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useSelector, useDispatch } from 'react-redux';

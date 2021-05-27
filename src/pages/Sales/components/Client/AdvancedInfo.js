@@ -9,13 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getClientInfo, selectClientInfo } from 'features/client/clientsSlice';
 import DataTable from '../DataTable';
 import Progress from 'components/Progress';
-
-const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices Submitted?","Invoice Email",
-    "Invoice Drop-Off Address", "Invoice Mail Address", "Payment Type",
-    "Payment Portal", "Payment Portal URL", "PO's Required?", "Are PO's Required for Invoice Submittal?",
-    "Approvals Required?", "Accounting Contact", "Contact Phone", "Contact Email", "Vendor Portal",
-    "Vendor Portal Username", "Vendor Portal Password", "How Are Jobs Released?", "Job Release Contact",
-    "PO Correction Handling?", "PO Correction Handling Email", "Expected Start Date", "Estimated Number of Homes"];
+import { advInfoColumnNames } from '../../static_data';
     
 const AdvancedInfo = ({...props}) => {
     const dispatch = useDispatch( );
