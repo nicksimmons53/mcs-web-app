@@ -8,7 +8,8 @@ import {
     Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getClientFiles, selectClientFiles } from 'features/client/clientsSlice';
 import GeneralInfo from './GeneralInfo';
 import AdvancedInfo from './AdvancedInfo';
 import ProgramInfo from './ProgramInfo';
@@ -59,6 +60,18 @@ function ClientGrid(props) {
         return ( ) => clearTimeout(timeout);
     }, [ ]);
 
+    // Redux 
+    const fileStatus = useSelector(state => state.clients.clientStatus.files);
+    const files = useSelector(selectClientFiles);
+
+    const regex = /\s/g
+    const reformattedClientName = props.client.clnnme.replace(regex, '_');
+    useEffect(( ) => {
+        if (fileStatus === 'idle') {
+            dispatch(getClientFiles(reformattedClientName))
+        }
+    }, [ dispatch ]);
+
     const changeView = (view) => { setSelectedView(view) }
 
     return (
@@ -102,7 +115,7 @@ function ClientGrid(props) {
                     open={selectedView === 4} 
                     onClose={( ) => changeView(0)}
                     className={classes.modal}>
-                    <Attachments clientId={props.clientId} changeView={changeView}/>
+                    <Attachments files={files} changeView={changeView}/>
                 </Modal>
 
                 { selectedView === 0 &&

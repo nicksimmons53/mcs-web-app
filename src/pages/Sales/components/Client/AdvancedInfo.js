@@ -1,15 +1,8 @@
 import React, { useEffect } from 'react';
 import {
     Button,
-    Card,
-    CardHeader,
     Divider,
     Grid,
-    IconButton,
-    List,
-    ListItem,
-    makeStyles,
-    Paper,
     Typography
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +19,6 @@ const advInfoColumnNames = ["Payment Frequency", "Autopay?", "How Are Invoices S
     
 const AdvancedInfo = ({...props}) => {
     const dispatch = useDispatch( );
-
     // Redux
     const infoStatus = useSelector(state => state.clients.clientStatus.advancedInfo);
     const info = useSelector(selectClientInfo);
@@ -41,6 +33,7 @@ const AdvancedInfo = ({...props}) => {
     if (infoStatus === 'loading') {
         renderedContent = <Progress/>;
     } else if (infoStatus === 'succeeded') {
+        console.log("MOUNTED")
         renderedContent = (
             <DataTable 
                 tableHead={["Questions", "Responses"]} 

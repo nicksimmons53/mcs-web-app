@@ -5,10 +5,14 @@ import {
 import _ from 'lodash';
 import { formatAddress, objectToArray, formatTinyInt, floatToCurrency } from 'helpers/dataFormatter';
 
+require('dotenv').config( );
+
+const sales_app_api_url = process.env.REACT_APP_SALES_APP_API_URL;
+
 export const getPotentialClients = createAsyncThunk(
     'clients/potential', 
     async ( ) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients`)
+        return fetch(`${sales_app_api_url}/web/clients`)
             .then((res) => res.json( ));
     }
 );
@@ -16,7 +20,7 @@ export const getPotentialClients = createAsyncThunk(
 export const getClientById = createAsyncThunk(
     'clients/selected/basicInfo',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}`)
             .then((res) => res.json( ));
     }
 );
@@ -24,7 +28,7 @@ export const getClientById = createAsyncThunk(
 export const getClientAddress = createAsyncThunk(
     'clients/selected/address',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/addresses`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}/addresses`)
             .then((res) => res.json( ));
     }
 );
@@ -32,7 +36,7 @@ export const getClientAddress = createAsyncThunk(
 export const getClientContacts = createAsyncThunk(
     'clients/selected/contacts',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/contacts`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}/contacts`)
             .then((res) => res.json( ));
     }
 );
@@ -40,7 +44,7 @@ export const getClientContacts = createAsyncThunk(
 export const getClientInfo = createAsyncThunk(
     'clients/selected/advancedInfo',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/advanced-info`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}/advanced-info`)
             .then((res) => res.json( ));
     }
 );
@@ -48,7 +52,7 @@ export const getClientInfo = createAsyncThunk(
 export const getClientPrograms = createAsyncThunk(
     'clients/selected/program',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/programs`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}/programs`)
             .then((res) => res.json( ));
     }
 );
@@ -56,7 +60,15 @@ export const getClientPrograms = createAsyncThunk(
 export const getClientParts = createAsyncThunk(
     'clients/selected/parts',
     async (id) => {
-        return fetch(`https://jdfao4jhc3.execute-api.us-east-1.amazonaws.com/dev/v3/web/clients/${id}/parts`)
+        return fetch(`${sales_app_api_url}/web/clients/${id}/parts`)
+            .then((res) => res.json( ));
+    }
+);
+
+export const getClientFiles = createAsyncThunk(
+    'clients/selected/files',
+    async (clientName) => {
+        return fetch(`${sales_app_api_url}/list-files/${clientName}`)
             .then((res) => res.json( ));
     }
 )
@@ -72,7 +84,8 @@ const clientsSlice = createSlice({
             contacts: 'idle',
             advancedInfo: 'idle',
             programs: 'idle',
-            parts: 'idle'
+            parts: 'idle',
+            files: 'idle'
         },
         selected: {
             id: null,
@@ -80,7 +93,8 @@ const clientsSlice = createSlice({
             addresses: [],
             contacts: [],
             programs: [],
-            parts: []
+            parts: [],
+            files: []
         }
     },
     reducers: {
@@ -97,7 +111,8 @@ const clientsSlice = createSlice({
                     contacts: 'idle',
                     advancedInfo: 'idle',
                     programs: 'idle',
-                    parts: 'idle'
+                    parts: 'idle',
+                    files: 'idle'
                 },
                 selected: {
                     id: null,
@@ -105,7 +120,8 @@ const clientsSlice = createSlice({
                     addresses: [],
                     contacts: [],
                     programs: [],
-                    parts: []
+                    parts: [],
+                    files: []
                 }
             });
         }
@@ -246,6 +262,26 @@ const clientsSlice = createSlice({
             state.clientStatus.parts = 'failed';
             state.error = action.error.message;
         },
+        [getClientFiles.pending]: (state, action) => {
+            state.clientStatus.files = 'loading';
+        },
+        [getClientFiles.fulfilled]: (state, { payload }) => { 
+            let formattedInfo = [];
+            payload.file.Contents.map((file, index) => {
+                file.id = index;
+                file.name = file.Key.split('/')[1];
+                file.type = file.name.split('.')[1];
+
+                formattedInfo.push(file);
+            });
+
+            state.clientStatus.files = 'succeeded';
+            state.selected.files = formattedInfo;
+        },
+        [getClientFiles.rejected]: (state, action) => {
+            state.clientStatus.files = 'failed';
+            state.error = action.error.message;
+        },
     }
 });
 
@@ -262,6 +298,8 @@ export const selectClientContacts = state => state.clients.selected.contacts;
 export const selectClientPrograms = state => state.clients.selected.programs;
 
 export const selectClientParts = state => state.clients.selected.parts;
+
+export const selectClientFiles = state => state.clients.selected.files;
 
 export const { setSelectedClientId, resetState } = clientsSlice.actions;
 

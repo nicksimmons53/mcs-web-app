@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-    Button,
-    Divider,
+    Button,  
     Grid,
     makeStyles,
     Typography
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
+import MenuButton from 'components/MenuButton';
+
+require('dotenv').config( );
 
 const useStyles = makeStyles({
     root: {
@@ -16,22 +18,41 @@ const useStyles = makeStyles({
     }
 });
 
-const columns = [
-    { field: 'name', headerName: 'File Name', flex: 1 },
-    { field: 'type', headerName: 'File Type', flex: 1 },
-    { field: 'uploadDate', headerName: 'Upload Date', flex: 1 }
-];
-
 const Attachments = ({...props}) => {
     const classes = useStyles( );
+
+    const downloadFile = (row) => {
+        return window.location.href = process.env.REACT_APP_S3_URL + row.Key;
+    };
+
+    const columns = [
+        { id: 'id'},
+        { field: 'name', headerName: 'File Name', flex: 1 },
+        { field: 'type', headerName: 'File Type', flex: 1 },
+        { field: 'LastModified', headerName: 'Upload Date', flex: 1 },
+        { 
+            field: 'action', 
+            headerName: ' ',
+            flex: 1, 
+            align: 'center',
+            renderCell: (params) => (
+                <MenuButton
+                    menuItems={[ 'Download', 'Close' ]}
+                    menuFunctions={[ 
+                        ( ) => downloadFile(params.row)
+                    ]}
+                    actionComp="button"/>
+            )
+        }
+    ];
 
     return (
         <Grid alignItems="center" justify="center" className={classes.root}>
             <Typography variant="h5" align="center" style={{margin:10}}>Client Files</Typography>
+
             <DataGrid 
                 autoHeight
-                checkboxSelection
-                rows={[]} 
+                rows={props.files} 
                 columns={columns} 
                 pageSize={10}/>
             
