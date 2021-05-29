@@ -4,7 +4,6 @@ import {
     Card,
     Divider,
     Grid,
-    makeStyles,
     Tab,
     Tabs,
     Typography
@@ -79,7 +78,7 @@ const BillingPartsInfo = ({...props}) => {
         if (partStatus === 'idle') {
             dispatch(getClientParts(props.clientId));
         }
-    }, [ dispatch ]);
+    }, [ dispatch, partStatus, props.clientId ]);
 
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 

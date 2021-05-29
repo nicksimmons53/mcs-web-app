@@ -70,7 +70,7 @@ function ClientList( ) {
     const clientStatus = useSelector(state => state.clients.status);
     const clients = useSelector(selectAllClients);
     
-    useEffect(async ( ) => {
+    useEffect(( ) => {
         if (clientStatus === 'idle') {
             dispatch(getPotentialClients( ));
         }

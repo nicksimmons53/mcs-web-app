@@ -24,7 +24,7 @@ const ProgramInfo = ({...props}) => {
         if (programStatus === 'idle') {
             dispatch(getClientPrograms(props.clientId));
         }
-    }, [ dispatch ]);
+    }, [ dispatch, programStatus, props.clientId ]);
 
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 

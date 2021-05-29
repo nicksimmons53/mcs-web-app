@@ -70,7 +70,7 @@ function ClientGrid(props) {
         if (fileStatus === 'idle') {
             dispatch(getClientFiles(reformattedClientName))
         }
-    }, [ dispatch ]);
+    }, [ dispatch, fileStatus, reformattedClientName ]);
 
     const changeView = (view) => { setSelectedView(view) }
 

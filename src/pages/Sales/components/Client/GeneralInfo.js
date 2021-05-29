@@ -75,7 +75,14 @@ const GeneralInfo = ({...props}) => {
         if (contactStatus === 'idle' && clientContacts.length === 0) {
             dispatch(getClientContacts(props.clientId));
         }
-    }, [ addressStatus, contactStatus, dispatch ]);
+    }, [ 
+        addressStatus, 
+        contactStatus, 
+        dispatch, 
+        props.clientId, 
+        clientAddresses.length,
+        clientContacts.length
+    ]);
 
 
     let renderedContent;

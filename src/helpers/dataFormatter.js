@@ -13,7 +13,7 @@ export const objectToArray = (object) => {
 }
 
 export const formatTinyInt = (object) => {
-    Object.keys(object).map((key, index) => { 
+    Object.keys(object).forEach((key, index) => { 
         if (object[key] === 1)
             object[key] = "Yes";
         else if (object[key] === 0)

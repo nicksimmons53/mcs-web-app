@@ -21,7 +21,7 @@ const AdvancedInfo = ({...props}) => {
         if (infoStatus === 'idle') {
             dispatch(getClientInfo(props.clientId));
         }
-    }, [ dispatch ]);
+    }, [ dispatch, infoStatus, props.clientId ]);
 
     let renderedContent;
     if (infoStatus === 'loading') {

@@ -2,8 +2,9 @@ import {
     createAsyncThunk,
     createSlice
 } from '@reduxjs/toolkit';
+import axios from 'axios';
 import _ from 'lodash';
-import { formatAddress, objectToArray, formatTinyInt, floatToCurrency } from 'helpers/dataFormatter';
+import { formatAddress, objectToArray, formatTinyInt } from 'helpers/dataFormatter';
 
 require('dotenv').config( );
 
@@ -12,64 +13,64 @@ const sales_app_api_url = process.env.REACT_APP_SALES_APP_API_URL;
 export const getPotentialClients = createAsyncThunk(
     'clients/potential', 
     async ( ) => {
-        return fetch(`${sales_app_api_url}/web/clients`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients`)
+            .then((res) => res.data );
     }
 );
 
 export const getClientById = createAsyncThunk(
     'clients/selected/basicInfo',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientAddress = createAsyncThunk(
     'clients/selected/address',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}/addresses`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}/addresses`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientContacts = createAsyncThunk(
     'clients/selected/contacts',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}/contacts`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}/contacts`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientInfo = createAsyncThunk(
     'clients/selected/advancedInfo',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}/advanced-info`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}/advanced-info`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientPrograms = createAsyncThunk(
     'clients/selected/program',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}/programs`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}/programs`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientParts = createAsyncThunk(
     'clients/selected/parts',
     async (id) => {
-        return fetch(`${sales_app_api_url}/web/clients/${id}/parts`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/web/clients/${id}/parts`)
+            .then((res) => res.data);
     }
 );
 
 export const getClientFiles = createAsyncThunk(
     'clients/selected/files',
     async (clientName) => {
-        return fetch(`${sales_app_api_url}/list-files/${clientName}`)
-            .then((res) => res.json( ));
+        return axios.get(`${sales_app_api_url}/list-files/${clientName}`)
+            .then((res) => res.data);
     }
 )
 
@@ -226,7 +227,7 @@ const clientsSlice = createSlice({
         },
         [getClientPrograms.fulfilled]: (state, { payload }) => { 
             let formattedInfo = [ ];
-            payload.map((program, index) => {
+            payload.forEach((program, index) => {
                 if (program === null) {
                     formattedInfo.push([ ]);
                 } else {
@@ -267,7 +268,7 @@ const clientsSlice = createSlice({
         },
         [getClientFiles.fulfilled]: (state, { payload }) => { 
             let formattedInfo = [];
-            payload.file.Contents.map((file, index) => {
+            payload.file.Contents.forEach((file, index) => {
                 file.id = index;
                 file.name = file.Key.split('/')[1];
                 file.type = file.name.split('.')[1];
