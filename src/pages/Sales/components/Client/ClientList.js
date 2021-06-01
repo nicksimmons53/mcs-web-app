@@ -55,7 +55,7 @@ function ClientList( ) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
-    const [ showTabs, setShowTabs ] = React.useState(true);
+    // const [ showTabs, setShowTabs ] = React.useState(true);
     const [ show, setShow ] = React.useState(true);
 
     useEffect(( ) => {
@@ -78,61 +78,61 @@ function ClientList( ) {
 
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
-    const ClientList = ({ clients }) => {
+    const Clients = ({ ...props }) => {
         const [ pageNum, setPageNum ] = React.useState(1);
-        const [ viewableClients, setViewableClients ] = React.useState(clients.slice(0, 15));
+        const [ viewableClients, setViewableClients ] = React.useState(props.clients.slice(0, 15));
 
         // Redux
         const clientId = useSelector(selectedClientId);
 
         const handlePageChange = (event, value) => { 
             setPageNum(value);
-            setViewableClients(clients.slice((value - 1) * 16, (value * 16) - 1));
+            setViewableClients(props.clients.slice((value - 1) * 16, (value * 16) - 1));
             window.scrollTo(0, 0);
         }
 
         if (clientId === null) {
-            setShowTabs(true);
+            // props.changeTabView( );
 
             return (
                 <Collapse in={clientId === null}>
                     <List className={classes.clientList}>
                         {viewableClients.map((client, index) => (
-                            <>
-                            <ListItem key={index}>
+                            <Grid key={index}>
+                                <ListItem>
+                                    <Divider/>
+
+                                    <ListItemText>{client.clnnme} - {client.fstnme} {client.lstnme}</ListItemText>
+
+                                    <MenuButton
+                                        menuItems={[
+                                            "View", 
+                                            "Message Sales Rep.",
+                                            "Approve",
+                                            "Decline",
+                                            "Export",
+                                            "Cancel"
+                                        ]}
+                                        menuFunctions={[
+                                            ( ) => dispatch(setSelectedClientId(client.id)),
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                        ]}
+                                        index={index}
+                                        actionComp="button"/>
+                                </ListItem>
+
                                 <Divider/>
 
-                                <ListItemText>{client.clnnme} - {client.fstnme} {client.lstnme}</ListItemText>
-
-                                <MenuButton
-                                    menuItems={[
-                                        "View", 
-                                        "Message Sales Rep.",
-                                        "Approve",
-                                        "Decline",
-                                        "Export",
-                                        "Cancel"
-                                    ]}
-                                    menuFunctions={[
-                                        ( ) => dispatch(setSelectedClientId(client.id)),
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null
-                                    ]}
-                                    index={index}
-                                    actionComp="button"/>
-                            </ListItem>
-
-                            <Divider/>
-
-                            </>
+                            </Grid>
                         ))}
 
                         <Pagination 
                             page={pageNum}
-                            count={parseInt(clients.length / 15) + 1} 
+                            count={parseInt(props.clients.length / 15) + 1} 
                             shape="rounded"
                             onChange={handlePageChange}
                             className={classes.pagination}/>
@@ -140,11 +140,11 @@ function ClientList( ) {
                 </Collapse>
             );
         } else {
-            setShowTabs(false);
+            // props.changeTabView( );
 
             return (
                 <ClientGrid 
-                    client={clients.find(client => client.id === clientId)}
+                    client={props.clients.find(client => client.id === clientId)}
                     clientId={clientId} 
                     hideClient={( ) => dispatch(resetState( ))}/>
             );
@@ -153,7 +153,7 @@ function ClientList( ) {
 
     return (
         <Grid container className={classes.root} direction="column">       
-            <Collapse in={showTabs}>
+            <Collapse in={true}>
                 <Grid container direction="row" alignItems="center" justify="center">
                     <Typography>
                     </Typography>
@@ -175,8 +175,8 @@ function ClientList( ) {
             </Collapse>
 
             { show === true && <Progress/>}
-            
-            { tabValue === 0 && show === false && <ClientList clients={clients.potential}/> }
+
+            { tabValue === 0 && show === false && <Clients clients={clients.potential}/> }
         </Grid>
     );
 }

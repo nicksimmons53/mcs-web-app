@@ -48,7 +48,7 @@ const Attachments = ({...props}) => {
     ];
 
     return (
-        <Grid alignItems="center" justify="center" className={classes.root}>
+        <Grid className={classes.root}>
             <Typography variant="h5" align="center" style={{margin:10}}>Client Files</Typography>
 
             <DataGrid 

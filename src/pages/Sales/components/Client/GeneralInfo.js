@@ -90,7 +90,7 @@ const GeneralInfo = ({...props}) => {
         renderedContent = <Progress/>;
     } else if (addressStatus === 'succeeded' && contactStatus === 'succeeded') {
         renderedContent = [clientAddresses, clientContacts].map((info, index) => (
-            <Card raised style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
+            <Card raised key={index} style={{marginBottom: 20, marginRight: 20, width: '100%'}}>
                 <DataGrid
                     autoHeight
                     rows={info}

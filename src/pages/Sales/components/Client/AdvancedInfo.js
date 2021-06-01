@@ -36,7 +36,7 @@ const AdvancedInfo = ({...props}) => {
     }
 
     return (
-        <Grid alignContent="center" justify="center">
+        <Grid>
             <Divider style={{marginBottom: 10}}/>
 
             <Typography variant="h6" align="center">Advanced Information</Typography>

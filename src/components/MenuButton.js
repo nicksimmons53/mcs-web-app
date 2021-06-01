@@ -30,21 +30,23 @@ const MenuButton = ({...props}) => {
 
     const Icon = props.icon;
 
-    const ListItems = ( ) => props.menuItems.map((option, optionIndex) => (
-        <>
-            <MenuItem onClick={( ) => {
-                if (props.menuFunctions[optionIndex] === null) {
-                    handleMenuItemClick( );
-                }
-                handleMenuItemClick(props.menuFunctions[optionIndex])}}>
-                {option}
-            </MenuItem>
-            {optionIndex === props.menuItems.length - 2 && <Divider/>}
-        </>
-    ))
+    const ListItems = React.forwardRef((props, ref) => {
+        return props.menuItems.map((option, optionIndex) => (
+            <div key={optionIndex} ref={ref}>
+                <MenuItem onClick={( ) => {
+                    if (props.menuFunctions[optionIndex] === null) {
+                        handleMenuItemClick( );
+                    }
+                    handleMenuItemClick(props.menuFunctions[optionIndex])}}>
+                    {option}
+                </MenuItem>
+                {optionIndex === props.menuItems.length - 2 && <Divider/>}
+            </div>    
+        ));
+    });
 
     return (
-        <div>
+        <div> 
             {props.actionComp === "button" && 
                 <Button 
                     variant="contained" 
@@ -67,12 +69,12 @@ const MenuButton = ({...props}) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}>
 
-                <ListItems/>
+                <ListItems {...props}/>
 
             </Menu>
         </div>
     );
-}
+};
 
 export default MenuButton;
 

@@ -89,10 +89,10 @@ const BillingPartsInfo = ({...props}) => {
         renderedContent = (
             <>
                 { tabValue === 0 &&
-                    <Grid direction="column" style={{flex: 5}}>
+                    <Grid style={{flex: 5}}>
                         {
                             Object.keys(parts[2]).map((table, index) => (
-                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                <Card raised key={index} style={{marginBottom: 10, marginTop: 10}}>
                                     <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
@@ -106,10 +106,10 @@ const BillingPartsInfo = ({...props}) => {
                 }
 
                 { tabValue === 1 &&
-                    <Grid direction="column" style={{flex: 5}}>
+                    <Grid style={{flex: 5}}>
                         {
                             Object.keys(parts[3]).map((table, index) => (
-                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                <Card raised key={index}  style={{marginBottom: 10, marginTop: 10}}>
                                     <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
@@ -123,10 +123,10 @@ const BillingPartsInfo = ({...props}) => {
                 }
 
                 { tabValue === 2 &&
-                    <Grid direction="column" style={{flex: 5}}>
+                    <Grid style={{flex: 5}}>
                         {
                             Object.keys(parts[0]).map((table, index) => (
-                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                <Card raised key={index} style={{marginBottom: 10, marginTop: 10}}>
                                     <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
@@ -140,10 +140,10 @@ const BillingPartsInfo = ({...props}) => {
                 }
 
                 { tabValue === 3 &&
-                    <Grid direction="column" style={{flex: 5}}>
+                    <Grid style={{flex: 5}}>
                         {
                             Object.keys(parts[4]).map((table, index) => (
-                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                <Card raised key={index} style={{marginBottom: 10, marginTop: 10}}>
                                     <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
@@ -157,10 +157,10 @@ const BillingPartsInfo = ({...props}) => {
                 }
 
                 { tabValue === 4 &&
-                    <Grid direction="column" style={{flex: 5}}>
+                    <Grid style={{flex: 5}}>
                         {
                             Object.keys(parts[1]).map((table, index) => (
-                                <Card raised style={{marginBottom: 10, marginTop: 10}}>
+                                <Card raised key={index} style={{marginBottom: 10, marginTop: 10}}>
                                     <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
@@ -177,7 +177,7 @@ const BillingPartsInfo = ({...props}) => {
     }
 
     return (
-        <Grid alignItems="center" justify="center">
+        <Grid>
             <Divider style={{marginBottom: 10}}/>
 
             <Typography variant="h6" align="center">Billing Parts</Typography>

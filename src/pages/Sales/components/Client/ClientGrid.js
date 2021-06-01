@@ -115,7 +115,7 @@ function ClientGrid(props) {
                     open={selectedView === 4} 
                     onClose={( ) => changeView(0)}
                     className={classes.modal}>
-                    <Attachments files={files} changeView={changeView}/>
+                        <div style={{flex: 1, display: 'flex', justifyContent: 'center'}}><Attachments files={files} changeView={changeView}/></div>
                 </Modal>
 
                 { selectedView === 0 &&

@@ -69,7 +69,7 @@ const ProgramInfo = ({...props}) => {
     }
 
     return (
-        <Grid alignItems="center" justify="center">
+        <Grid>
             <Divider style={{marginBottom: 10}}/>
 
             <Typography variant="h6" align="center">Program Information</Typography>

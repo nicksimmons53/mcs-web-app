@@ -36,14 +36,14 @@ function Header() {
             justify="space-between" 
             className={classes.root}>
 
-            <Grid container md direction="row" alignItems="center">
+            <Grid container direction="row" alignItems="center">
                 <img src={logo} alt="MC Surfaces, Inc." className={classes.image}/>
                 <Typography className={classes.h1} variant="h4">
                     MC Surfaces
                 </Typography>
             </Grid>
 
-            <Grid container xs direction="row-reverse" alignItems="center">
+            <Grid container direction="row-reverse" alignItems="center">
             </Grid>
             
         </Grid>
