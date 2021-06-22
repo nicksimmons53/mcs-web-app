@@ -3,11 +3,13 @@ import {
     Button, 
     Collapse,
     Grid,
+    IconButton,
     makeStyles,
     Modal,
     Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
 import { getClientFiles, selectClientFiles } from 'features/client/clientsSlice';
 import GeneralInfo from './GeneralInfo';
@@ -95,7 +97,12 @@ function ClientGrid(props) {
         <Collapse in={show === false}>
             <Grid container direction="column" className={classes.root}>
                 <Grid container direction="row" justify="space-between">
-                    <Typography></Typography>
+                    <IconButton color="secondary" onClick={( ) => {
+                        setShow(true);
+                        dispatch(props.hideClient( )); 
+                        }}>
+                        <ArrowBackIcon fontSize="large"/>
+                    </IconButton>
                     <Typography variant="h4" className={classes.headerText}>
                         {props.client.clnnme}
                     </Typography>
