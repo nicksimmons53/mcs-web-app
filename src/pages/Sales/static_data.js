@@ -97,7 +97,7 @@ export const tileInfoRows = [
     "Grout Product",
     "Preferred Standard Practice for Subfloor",
     "Subfloor Practice - Other",
-    "Tiel Return Walls at Backsplash",
+    "Tile Return Walls at Backsplash",
     "Who Does Takeoffs?",
     "Waste Factor Percentage",
     "Waste Factor Percentage - Walls",

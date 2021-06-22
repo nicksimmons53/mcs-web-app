@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getClientContacts, selectClientContacts } from 'features/client/clientsSlice';
 import { getClientAddress, selectClientAddress } from 'features/client/clientsSlice';
 import { DataGrid } from '@material-ui/data-grid';
+import clientAPI from 'api/clientAPI';
 import MenuButton from '../../../../components/MenuButton';
 import Progress from 'components/Progress';
 
@@ -100,6 +101,23 @@ const GeneralInfo = ({...props}) => {
         ));
     }
 
+    const exportClient = (id, clientName, index) => {
+        let regex = /\s/g;
+        let infoSections = ["advInfo", "programs", "billingParts", "files"];
+        let client = {
+            id: id,
+            name: clientName.replace(regex, '_')
+        };
+
+        clientAPI.exportInfo(client, {
+            basicInfo: true,
+            advInfo: infoSections[index] === "advInfo" ? true : false,
+            programs: infoSections[index] === "programs" ? true : false,
+            billingParts: infoSections[index] === "billingParts" ? true : false,
+            files: infoSections[index] === "files" ? true : false
+        });
+    }
+
     return (
         <Grid container direction="column" alignItems="center" justify="center">
             {renderedContent}
@@ -114,7 +132,7 @@ const GeneralInfo = ({...props}) => {
                                     menuItems={['Open', 'Export', 'Cancel']} 
                                     menuFunctions={[
                                         ( ) => props.changeView(index + 1),
-                                        ( ) => props.changeView(null),
+                                        ( ) => exportClient(props.clientId, props.clientName, index),
                                         ( ) => props.changeView(null)
                                     ]}
                                     index={index}

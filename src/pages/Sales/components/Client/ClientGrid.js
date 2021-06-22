@@ -16,6 +16,7 @@ import ProgramInfo from './ProgramInfo';
 import BillingPartsInfo from './BillingPartsInfo';
 import Attachments from './Attachments';
 import MenuButton from '../../../../components/MenuButton';
+import clientAPI from 'api/clientAPI';
 
 const useStyles = makeStyles({
     collapseButton: {
@@ -74,6 +75,22 @@ function ClientGrid(props) {
 
     const changeView = (view) => { setSelectedView(view) }
 
+    const exportClient = (id, clientName) => {
+        let regex = /\s/g;
+        let client = {
+            id: id,
+            name: clientName.replace(regex, '_')
+        };
+
+        clientAPI.exportInfo(client, {
+            basicInfo: true,
+            advInfo: true,
+            programs: true,
+            billingParts: true,
+            files: true
+        });
+    }
+
     return (
         <Collapse in={show === false}>
             <Grid container direction="column" className={classes.root}>
@@ -90,13 +107,22 @@ function ClientGrid(props) {
                             'Export',
                             'Cancel'
                         ]}
-                        menuFunctions={[]}
+                        menuFunctions={[
+                            null,
+                            null,
+                            null,
+                            ( ) => exportClient(props.clientId, props.client.clnnme),
+                            null
+                        ]}
                         actionComp="icon"
                         icon={MenuIcon}/>
                 </Grid>
 
                 <Collapse in={selectedView === 0 || selectedView === 4}>
-                    <GeneralInfo clientId={props.clientId} changeView={changeView}/>
+                    <GeneralInfo 
+                        clientId={props.clientId} 
+                        clientName={props.client.clnnme}
+                        changeView={changeView}/>
                 </Collapse>
                 
                 <Collapse in={selectedView === 1}>

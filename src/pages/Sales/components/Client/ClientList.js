@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPotentialClients, selectAllClients } from 'features/client/clientsSlice';
 import { selectedClientId, setSelectedClientId } from 'features/client/clientsSlice';
 import { resetState } from 'features/client/clientsSlice';
+import clientAPI from 'api/clientAPI';
 import MenuButton from '../../../../components/MenuButton';
 import ClientGrid from './ClientGrid';
 import Progress from 'components/Progress';
@@ -78,6 +79,22 @@ function ClientList( ) {
 
     const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
+    const exportClient = (id, clientName) => {
+        let regex = /\s/g;
+        let client = {
+            id: id,
+            name: clientName.replace(regex, '_')
+        };
+
+        clientAPI.exportInfo(client, {
+            basicInfo: true,
+            advInfo: true,
+            programs: true,
+            billingParts: true,
+            files: true
+        });
+    }
+
     const Clients = ({ ...props }) => {
         const [ pageNum, setPageNum ] = React.useState(1);
         const [ viewableClients, setViewableClients ] = React.useState(props.clients.slice(0, 15));
@@ -92,8 +109,6 @@ function ClientList( ) {
         }
 
         if (clientId === null) {
-            // props.changeTabView( );
-
             return (
                 <Collapse in={clientId === null}>
                     <List className={classes.clientList}>
@@ -118,7 +133,7 @@ function ClientList( ) {
                                             null,
                                             null,
                                             null,
-                                            null,
+                                            ( ) => exportClient(client.id, client.clnnme),
                                             null
                                         ]}
                                         index={index}
