@@ -27,8 +27,7 @@ const useStyles = makeStyles({
         border: 3,
         borderColor: "#FFFFFF",
         borderRadius: 5,
-        borderStyle: "solid",
-        padding: 0
+        borderStyle: "solid"
     },
     text1: {
         margin: 10
@@ -56,7 +55,6 @@ function ClientList( ) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
-    // const [ showTabs, setShowTabs ] = React.useState(true);
     const [ show, setShow ] = React.useState(true);
 
     useEffect(( ) => {

@@ -5,20 +5,21 @@ import {
   Route 
 } from 'react-router-dom';
 import { 
-  Container,
-  makeStyles
+  Container
 } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import SalesProfile from './pages/Sales/SalesProfile';
+import Login from 'pages/Login';
+import Profile from 'pages/Profile';
+import colors from 'assets/colors';
 
 const theme = createMuiTheme({
   palette: {
       primary: {
-        main: '#1C1F33'
+        main: colors.ghost_white
       },
       secondary: {
-        main: '#E85F5C'
+        main: colors.burnt_sienna
       },
       error: {
         main: '#E85F5C'
@@ -35,26 +36,18 @@ const theme = createMuiTheme({
   }
 });
 
-const useStyles = makeStyles({
-  root: {
-      backgroundColor: "#1C1F33",
-      marginTop: 0,
-      minHeight: "100vh",
-      minWidth: "100vw"
-  }
-});
-
-function App() {
-  const classes = useStyles();
-
+function App( ) {
   return (
     <ThemeProvider theme={theme}>
-      <Container className={classes.root}>
+      <Container>
           <Router>
             {
               <Switch>
-                <Route path="/">
-                  <SalesProfile/>
+                <Route path="/login">
+                  <Login/>
+                </Route>
+                <Route path="/profile">
+                  <Profile/>
                 </Route>
               </Switch>
             }

@@ -102,7 +102,7 @@ function ClientGrid(props) {
                         dispatch(props.hideClient( )); 
                         }}>
                         <ArrowBackIcon fontSize="large"/>
-                    </IconButton>
+                    </IconButton>d
                     <Typography variant="h4" className={classes.headerText}>
                         {props.client.clnnme}
                     </Typography>
