@@ -19,6 +19,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
+import { useAuth0 } from "@auth0/auth0-react";
 import logo from 'assets/logo.png';
 import colors from 'assets/colors';
 
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth
   },
   drawerPaper: {
-    backgroundColor: "#3D5A80",
+    backgroundColor: colors.bdazzled_blue,
     width: drawerWidth
   },
   drawerContainer: {
@@ -63,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 function NavDrawer( ) {
   const classes = useStyles( );
+  const { logout } = useAuth0( );
   const [ selected, setSelected ] = React.useState(0);
   const [ open, setOpen ] = React.useState(true);
 
@@ -160,7 +162,9 @@ function NavDrawer( ) {
             Profile Actions
           </ListSubheader>
           <Divider/>
-          <ListItem button>
+          <ListItem 
+            button
+            onClick={( ) => logout({ returnTo: "http://localhost:3000/login" })}>
             <ListItemText primary="Logout" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>

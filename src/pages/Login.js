@@ -7,7 +7,7 @@ import colors from 'assets/colors';
 
 const useStyles = makeStyles({
     root: {
-        backgroundColor: "#EBEDEF",
+        backgroundColor: colors.gunmetal,
         height: '100vh',
         left: 0,
         minWidth: "100%",
@@ -15,9 +15,9 @@ const useStyles = makeStyles({
         position: 'absolute'
     },
     loginArea: {
-        backgroundColor: "#FFFFFF",
+        backgroundColor: colors.ghost_white,
         border: 'solid',
-        borderColor: colors.blue_sapphire,
+        borderColor: colors.burnt_sienna,
         borderRadius: 10,
         padding: 25,
         width: '50%'
