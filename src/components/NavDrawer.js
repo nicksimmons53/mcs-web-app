@@ -128,7 +128,7 @@ function NavDrawer( ) {
               <ListItem 
                 button 
                 selected={selected === index}
-                className={selected === index && classes.selected}
+                className={selected === index ? classes.selected : null}
                 onClick={( ) => item.action(index)}>
                 <ListItemIcon>
                   {item.icon}
