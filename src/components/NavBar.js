@@ -2,6 +2,7 @@ import React from 'react';
 import { 
     AppBar,
     Avatar, 
+    Badge, 
     Divider, 
     Grid,
     IconButton, 
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: 10
     },
     icon: {
+        backgroundColor: "transparent",
         color: colors.ghost_white,
         margin: 10
     },
@@ -51,7 +53,9 @@ function NavBar( ) {
                         <Divider orientation="vertical" flexItem/>
 
                         <IconButton className={classes.icon}>
-                            <NotificationsNoneIcon fontSize="large"/>
+                            <Badge color="secondary" badgeContent={0} showZero>
+                                <NotificationsNoneIcon fontSize="large"/>
+                            </Badge>
                         </IconButton>
 
                         <Divider orientation="vertical" flexItem/>
