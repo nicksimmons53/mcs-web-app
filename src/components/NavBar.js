@@ -1,14 +1,17 @@
 import React from 'react';
 import { 
-    AppBar, 
+    AppBar,
+    Avatar, 
     Divider, 
     Grid,
     IconButton, 
     makeStyles,
-    Toolbar
+    Toolbar,
+    Typography
 } from '@material-ui/core';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import { useSelector } from 'react-redux';
+import { selectAuth0UserInfo } from 'features/user/userSlice';
 import colors from 'assets/colors';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,11 +30,15 @@ const useStyles = makeStyles((theme) => ({
     icon: {
         color: colors.ghost_white,
         margin: 10
+    },
+    font: {
+        color: colors.ghost_white
     }
 }));
 
 function NavBar( ) {
     const classes = useStyles( );
+    const user = useSelector(selectAuth0UserInfo);
 
     return (
         <Grid container direction="row" className={classes.root} justify="space-between">
@@ -50,8 +57,10 @@ function NavBar( ) {
                         <Divider orientation="vertical" flexItem/>
 
                         <IconButton className={classes.icon}>
-                            <AccountBoxIcon fontSize="large"/>
+                            <Avatar alt={user.name} src={user.picture}/>
                         </IconButton>
+
+                        <Typography className={classes.font}>{user.name}</Typography>
                     </Grid>
                 </Toolbar>
             </AppBar>
