@@ -1,10 +1,14 @@
 import React from 'react';
 import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
+import colors from 'assets/colors';
 
 const useStyles = makeStyles({
     root: {
         minHeight: "100vh",
         minWidth: "100%"
+    },
+    spinner: {
+        color: colors.burnt_sienna
     }
 })
 
@@ -17,7 +21,7 @@ function Loading() {
             alignItems="center"
             justify="center"
             className={classes.root}>
-            <CircularProgress color="secondary" size={100}/>
+            <CircularProgress className={classes.spinner} size={100}/>
         </Grid>
     );
 }

@@ -1,12 +1,11 @@
 import {
-    createAsyncThunk,
     createSlice
 } from '@reduxjs/toolkit';
 
 export const userSlice = createSlice({
     name: 'user',
     initialState: {
-        auth0UserInfo: {},
+        auth0UserInfo: null,
         user: null
     },
     reducers: {

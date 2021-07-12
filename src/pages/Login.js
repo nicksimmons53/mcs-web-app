@@ -23,6 +23,7 @@ const useStyles = makeStyles({
         width: '50%'
     },
     button: {
+        backgroundColor: colors.burnt_sienna,
         fontFamily: 'Comfortaa',
         width: '50%'
     }

@@ -19,6 +19,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
+import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import logo from 'assets/logo.png';
 import colors from 'assets/colors';
@@ -74,6 +75,7 @@ function NavDrawer( ) {
       icon: <AssessmentIcon fontSize="large" className={classes.listItem}/>,
       rightIcon: null,
       optionalIcon: null,
+      destination: "/profile",
       action: (index) => setSelected(index)
     },
     {
@@ -81,6 +83,7 @@ function NavDrawer( ) {
       icon: <ViewModuleIcon fontSize="large" className={classes.listItem}/>,
       rightIcon: <ExpandMore fontSize="large" className={classes.listItem}/>,
       optionalIcon: <ExpandLess fontSize="large" className={classes.listItem}/>,
+      destination: "/null",
       action: (index) => setSelected(index)
     },
     {
@@ -88,6 +91,7 @@ function NavDrawer( ) {
       icon: <PersonIcon fontSize="large" className={classes.listItem}/>,
       rightIcon: null,
       optionalIcon: null,
+      destination: "/settings",
       action: (index) => setSelected(index)
     }
   ];
@@ -126,10 +130,11 @@ function NavDrawer( ) {
           { listItems.map((item, index) => (
             <div key={index}>
               <ListItem 
-                button 
+                component={Link} 
                 selected={selected === index}
                 className={selected === index ? classes.selected : null}
-                onClick={( ) => item.action(index)}>
+                onClick={( ) => item.action(index)}
+                to={item.destination}>
                 <ListItemIcon>
                   {item.icon}
                 </ListItemIcon>
@@ -169,8 +174,8 @@ function NavDrawer( ) {
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
           <ListItem button>
-            <ListItemText primary="Help" className={classes.listItem}/>
-            <ArrowForwardIosIcon className={classes.listItem}/>
+              <ListItemText primary="Help" className={classes.listItem}/>
+              <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
         </List>
       </div>
