@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
     Grid, 
     makeStyles
 } from '@material-ui/core';
 import colors from 'assets/colors';
+import NavBar from 'components/NavBar';
+import NavDrawer from 'components/NavDrawer';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Redirect } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuth0User, getUserInfo, selectUserInfo } from 'features/user/userSlice';
+import Login from './Login';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,10 +23,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         zIndex: 0
     },
-    toolbar: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
-        marginLeft: 25,
+        marginLeft: 350,
         zIndex: 1
     },
     link: {
@@ -27,22 +33,37 @@ const useStyles = makeStyles((theme) => ({
         color: colors.burnt_sienna,
         display: "flex",
         fontWeight: "bold"
-    },
-    icon: {
-        color: colors.burnt_sienna,
-        height: 30,
-        marginRight: theme.spacing(0.5),
-        width: 30
     }
 }));
 
 function Profile( ) {
     const classes = useStyles( );
+    const { user, isLoading, isAuthenticated, logout } = useAuth0( );
+    const dispatch = useDispatch( );
+
+    if (typeof user === "undefined") {
+        if (!isLoading) {
+            logout( );
+    
+            return <Redirect to="/login"/>;
+        }
+    }
+
+    if (isAuthenticated) {
+        dispatch(setAuth0User(user));
+        dispatch(getUserInfo(user.email));
+    }
 
     return (
-        <Grid className={classes.content}>
-            <div className={classes.toolbar}>
-            </div>
+        <Grid className={classes.root}>
+            <NavBar/>
+
+            <NavDrawer/>
+
+            <Grid className={classes.content}>
+                <div className={classes.toolbar}>
+                </div>
+            </Grid>
         </Grid>
     )
 }

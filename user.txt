@@ -12,31 +12,10 @@ User : {
 			Clients 	: {
 				potential	: {
 					main			: CRUD,
-					advancedInfo	: boolean,
-					programInfo		: boolean,
-					billingParts	: boolean,
-					fileAttachments	: boolean
-				},
-				queued		: {
-					main			: boolean,
-					advancedInfo	: boolean,
-					programInfo		: boolean,
-					billingParts	: boolean,
-					fileAttachments	: boolean
-				},
-				approved	: {
-					main			: boolean,
-					advancedInfo	: boolean,
-					programInfo		: boolean,
-					billingParts	: boolean,
-					fileAttachments	: boolean
-				},
-				active		: {
-					main			: boolean,
-					advancedInfo	: boolean,
-					programInfo		: boolean,
-					billingParts	: boolean,
-					fileAttachments	: boolean
+					advancedInfo	: CRUD,
+					programInfo		: CRUD,
+					billingParts	: CRUD,
+					fileAttachments	: CRUD
 				}
 			}
 		},

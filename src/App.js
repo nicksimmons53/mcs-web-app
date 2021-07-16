@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   BrowserRouter as Router, 
   Switch, 
-  Route, 
+  Route,
   Redirect
 } from 'react-router-dom';
 import { 
@@ -14,7 +14,7 @@ import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDispatch } from 'react-redux';
-import { setAuth0User } from "features/user/userSlice";
+import { getUserInfo, setAuth0User } from "features/user/userSlice";
 import Login from 'pages/Login';
 import Profile from 'pages/Profile';
 import NavBar from 'components/NavBar';
@@ -63,14 +63,6 @@ const useStyles = makeStyles({
 
 function App( ) {
   const classes = useStyles( );
-  const { user, isAuthenticated, isLoading } = useAuth0( );
-  const dispatch = useDispatch( );
-
-  if (isLoading) {
-      return <Loading/>;
-  } else {
-      dispatch(setAuth0User(user));
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -78,28 +70,14 @@ function App( ) {
           <Router>
             {
               <Switch>
-                <Route path="/login">
-                  <Login/>
-                </Route>
-                <Route>
-                  <Grid className={classes.root}>
-                    <NavBar/>
-                    
-                    <NavDrawer/>
+                <Route path="/login" component={Login}/>
 
-                    <Grid className={classes.screen}>
-                      <Route path="/profile">
-                        <Profile/>
-                      </Route>
-                      <Route path="/modules">
-                        <Loading/>
-                      </Route>
-                      <Route path="/settings">
-                        <Loading/>
-                      </Route>
-                    </Grid>
-                  </Grid>
-                </Route>
+                <Route path="/profile" component={Profile}/>
+
+                <Route path="/modules" component={Loading}/>
+                
+                <Route path="/settings" component={Loading}/>
+
               </Switch>
             }
           </Router>
