@@ -20,7 +20,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import logo from 'assets/logo.png';
 import colors from 'assets/colors';
@@ -85,8 +85,8 @@ const useStyles = makeStyles((theme) => ({
 function NavDrawer({ user }) {
   const classes = useStyles( );
   const { logout } = useAuth0( );
-  const [ selected, setSelected ] = React.useState("Dashboard");
   const [ open, setOpen ] = React.useState(false);
+  const location = useLocation( );
  
   const logoutAndClear = ( ) => {
     localStorage.removeItem("user");
@@ -101,9 +101,8 @@ function NavDrawer({ user }) {
             button 
             component={Link}
             to="/profile/modules/sales"
-            onClick={( ) => setSelected("Sales")}
-            selected={selected === "Sales"}
-            className={selected === "Sales" ? classes.selectedUserModule : classes.moduleItem}>
+            selected={location.pathname === "/profile/modules/sales"}
+            className={location.pathname === "/profile/modules/sales" ? classes.selectedUserModule : classes.moduleItem}>
             <ListItemIcon>
               <PeopleIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
@@ -127,18 +126,16 @@ function NavDrawer({ user }) {
 
           <ListItem 
             button
-            onClick={( ) => setSelected("AddUser")}
-            selected={selected === "AddUser"}
-            className={selected === "AddUser" ? classes.selected : null}>
+            selected={location.pathname === "/admin/user/add"}
+            className={location.pathname === "/admin/user/add" ? classes.selected : null}>
             <ListItemText primary="Add User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
 
           <ListItem 
             button
-            onClick={( ) => setSelected("EditUser")}
-            selected={selected === "EditUser"}
-            className={selected === "EditUser" ? classes.selected : null}>
+            selected={location.pathname === "/admin/user/edit"}
+            className={location.pathname === "/admin/user/edit" ? classes.selected : null}>
             <ListItemText primary="Edit User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
@@ -194,9 +191,8 @@ function NavDrawer({ user }) {
 
           <ListItem 
             component={Link} 
-            onClick={( ) => setSelected("Dashboard")}
-            selected={selected === "Dashboard"}
-            className={selected === "Dashboard" ? classes.selected : null}
+            selected={location.pathname === "/profile"}
+            className={location.pathname === "/profile" ? classes.selected : null}
             to="/profile">
             <ListItemIcon>
               <AssessmentIcon fontSize="large" className={classes.listItem}/>
@@ -205,10 +201,7 @@ function NavDrawer({ user }) {
             <ListItemText primary="Dashboard" className={classes.listItem}/>
           </ListItem>
 
-          <ListItem 
-            component={Link} 
-            onClick={( ) => setOpen(!open)}
-            to="/profile">
+          <ListItem onClick={( ) => setOpen(!open)}>
             <ListItemIcon>
               <ViewModuleIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
@@ -228,10 +221,9 @@ function NavDrawer({ user }) {
 
           <ListItem 
             component={Link} 
-            onClick={( ) => setSelected("Settings")}
-            selected={selected === "Settings"}
-            className={selected === "Settings" ? classes.selected : null}
-            to="/profile">
+            selected={location.pathname === "/settings"}
+            className={location.pathname === "/settings" ? classes.selected : null}
+            to="/settings">
             <ListItemIcon>
               <SettingsIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
