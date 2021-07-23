@@ -13,7 +13,7 @@ ReactDOM.render(
     clientId={process.env.REACT_APP_AUTH_CLIENT_ID}
     redirectUri="http://localhost:3000/profile">
     <Provider store={store}>
-        <App />
+      <App/>
     </Provider>
   </Auth0Provider>,
   document.getElementById('root')

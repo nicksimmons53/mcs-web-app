@@ -16,16 +16,15 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
+import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import logo from 'assets/logo.png';
 import colors from 'assets/colors';
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from 'features/user/userSlice';
-import Login from 'pages/Login';
+import RBAC from 'components/RBAC';
 
 const drawerWidth = 350;
 
@@ -50,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
   headerText: {
     color: colors.ghost_white,
     fontFamily: 'Comfortaa', 
+    fontSize: 38,
     fontWeight: 'bold', 
     marginLeft: 10
   },
@@ -61,97 +61,91 @@ const useStyles = makeStyles((theme) => ({
   },
   listSubheader: {
     color: colors.ghost_white,
-    fontSize: 16
+    fontSize: 18
+  },
+  userModuleItem: {
+    color: colors.ghost_white
+  },
+  moduleItem: {
+    marginLeft: '10%'
   },
   selected: {
     borderColor: colors.ghost_white,
     borderLeft: 'solid',
     borderLeftWidth: '5',
+  },
+  selectedUserModule: {
+    borderColor: colors.ghost_white,
+    borderLeft: 'solid',
+    borderLeftWidth: '5',
+    marginLeft: '10%'
   }
 }));
 
-function NavDrawer( ) {
+function NavDrawer({ user }) {
   const classes = useStyles( );
   const { logout } = useAuth0( );
-  const [ selected, setSelected ] = React.useState(0);
-  const [ open, setOpen ] = React.useState(true);
-
-  // const permissions = useSelector(selectUserInfo).Permissions;
-
-  const listItems = [
-    {
-      name: 'Dashboard',
-      icon: <AssessmentIcon fontSize="large" className={classes.listItem}/>,
-      rightIcon: null,
-      optionalIcon: null,
-      destination: "/profile",
-      action: (index) => setSelected(index)
-    },
-    {
-      name: 'User Modules',
-      icon: <ViewModuleIcon fontSize="large" className={classes.listItem}/>,
-      rightIcon: <ExpandMore fontSize="large" className={classes.listItem}/>,
-      optionalIcon: <ExpandLess fontSize="large" className={classes.listItem}/>,
-      destination: "/null",
-      action: (index) => setSelected(index)
-    },
-    {
-      name: 'Profile Settings',
-      icon: <PersonIcon fontSize="large" className={classes.listItem}/>,
-      rightIcon: null,
-      optionalIcon: null,
-      destination: "/settings",
-      action: (index) => setSelected(index)
-    }
-  ];
+  const [ selected, setSelected ] = React.useState("Dashboard");
+  const [ open, setOpen ] = React.useState(false);
+ 
+  const logoutAndClear = ( ) => {
+    localStorage.removeItem("user");
+    logout({ returnTo: "http://localhost:3000/login" });
+  }
 
   const UserModules = ( ) => {
-    let sales = { name: "Sales" };
-    let approvedModules = [];
-
-    // if (permissions.Admin === true) {
-    //   approvedModules.push(sales);
-    // }
-
     return (
       <List disablePadding>
-        {
-          approvedModules.map((module, index) => (
-            <ListItem button>
-              <ListItemText primary={module.name} className={classes.listItem}/>
-              <ArrowForwardIosIcon className={classes.listItem}/>
-            </ListItem>
-          ))
-        }
+        <RBAC user={user} roles={["Sales.Allowed"]}>
+          <ListItem 
+            button 
+            component={Link}
+            to="/profile/modules/sales"
+            onClick={( ) => setSelected("Sales")}
+            selected={selected === "Sales"}
+            className={selected === "Sales" ? classes.selectedUserModule : classes.moduleItem}>
+            <ListItemIcon>
+              <PeopleIcon fontSize="large" className={classes.listItem}/>
+            </ListItemIcon>
+            <ListItemText primary="Sales" className={classes.userModuleItem}/>
+          </ListItem>
+        </RBAC>
+
       </List>
     );
   };
 
   const UserActions = ( ) => {
-    // if (permissions.Admin === false) {
-    //   return <></>;
-    // }
-
     return (
-      <div>
-        <ListSubheader className={classes.listSubheader}>
-          User Actions
-        </ListSubheader>
+      <RBAC user={user} roles={[ ]}>
+        <div>
+          <ListSubheader className={classes.listSubheader}>
+            User Actions
+          </ListSubheader>
 
-        <Divider/>
+          <Divider/>
 
-        <ListItem button>
-          <ListItemText primary="Add User" className={classes.listItem}/>
-          <ArrowForwardIosIcon className={classes.listItem}/>
-        </ListItem>
+          <ListItem 
+            button
+            onClick={( ) => setSelected("AddUser")}
+            selected={selected === "AddUser"}
+            className={selected === "AddUser" ? classes.selected : null}>
+            <ListItemText primary="Add User" className={classes.listItem}/>
+            <ArrowForwardIosIcon className={classes.listItem}/>
+          </ListItem>
 
-        <ListItem button>
-          <ListItemText primary="Edit User" className={classes.listItem}/>
-          <ArrowForwardIosIcon className={classes.listItem}/>
-        </ListItem>
+          <ListItem 
+            button
+            onClick={( ) => setSelected("EditUser")}
+            selected={selected === "EditUser"}
+            className={selected === "EditUser" ? classes.selected : null}>
+            <ListItemText primary="Edit User" className={classes.listItem}/>
+            <ArrowForwardIosIcon className={classes.listItem}/>
+          </ListItem>
 
-        <Divider/>
-      </div>
+          <Divider/>
+        </div>
+      </RBAC>
     );
   };
 
@@ -161,16 +155,14 @@ function NavDrawer( ) {
         <ListSubheader className={classes.listSubheader}>
             Profile Actions
           </ListSubheader>
+
           <Divider/>
+
           <ListItem 
             button
-            onClick={( ) => logout({ returnTo: "http://localhost:3000/login" })}>
+            onClick={( ) => logoutAndClear( )}>
             <ListItemText primary="Logout" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
-          </ListItem>
-          <ListItem button>
-              <ListItemText primary="Help" className={classes.listItem}/>
-              <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
       </div>
     );
@@ -187,7 +179,7 @@ function NavDrawer( ) {
 
       <Grid container direction="row" alignItems="center" className={classes.header}>
         <img src={logo} alt="MC Surfaces, Inc."/>
-        <Typography variant="h4" className={classes.headerText}>OneStop</Typography>
+        <Typography className={classes.headerText}>OneStop</Typography>
       </Grid>
 
       <div className={classes.drawerContainer}>
@@ -202,8 +194,9 @@ function NavDrawer( ) {
 
           <ListItem 
             component={Link} 
-            selected={false}
-            onClick={( ) => console.log("CLICKED")}
+            onClick={( ) => setSelected("Dashboard")}
+            selected={selected === "Dashboard"}
+            className={selected === "Dashboard" ? classes.selected : null}
             to="/profile">
             <ListItemIcon>
               <AssessmentIcon fontSize="large" className={classes.listItem}/>
@@ -211,10 +204,40 @@ function NavDrawer( ) {
 
             <ListItemText primary="Dashboard" className={classes.listItem}/>
           </ListItem>
+
+          <ListItem 
+            component={Link} 
+            onClick={( ) => setOpen(!open)}
+            to="/profile">
+            <ListItemIcon>
+              <ViewModuleIcon fontSize="large" className={classes.listItem}/>
+            </ListItemIcon>
+
+            <ListItemText primary="User Modules" className={classes.listItem}/>
+
+            { open ? 
+              <ExpandLess fontSize="large" className={classes.listItem}/>
+              :
+              <ExpandMore fontSize="large" className={classes.listItem}/>
+            }
+          </ListItem>
   
           <Collapse in={open} unmountOnExit>
             <UserModules/>
           </Collapse>
+
+          <ListItem 
+            component={Link} 
+            onClick={( ) => setSelected("Settings")}
+            selected={selected === "Settings"}
+            className={selected === "Settings" ? classes.selected : null}
+            to="/profile">
+            <ListItemIcon>
+              <SettingsIcon fontSize="large" className={classes.listItem}/>
+            </ListItemIcon>
+
+            <ListItemText primary="Profile Settings" className={classes.listItem}/>
+          </ListItem>
 
           <Divider/>
 
@@ -224,7 +247,7 @@ function NavDrawer( ) {
         </List>
       </div>
     </Drawer>
-  )
+  );
 };
 
 export default NavDrawer;

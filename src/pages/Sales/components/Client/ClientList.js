@@ -3,15 +3,18 @@ import {
     Collapse,
     Divider,
     Grid, 
+    IconButton, 
     List, 
     ListItem, 
-    ListItemText, 
+    ListItemText,
     makeStyles,
     Tab,
     Tabs,
     Typography
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPotentialClients, selectAllClients } from 'features/client/clientsSlice';
 import { selectedClientId, setSelectedClientId } from 'features/client/clientsSlice';
@@ -20,6 +23,7 @@ import clientAPI from 'api/clientAPI';
 import MenuButton from '../../../../components/MenuButton';
 import ClientGrid from './ClientGrid';
 import Progress from 'components/Progress';
+import colors from 'assets/colors';
 
 const useStyles = makeStyles({
     root: {
@@ -27,17 +31,32 @@ const useStyles = makeStyles({
         border: 3,
         borderColor: "#FFFFFF",
         borderRadius: 5,
-        borderStyle: "solid"
+        borderStyle: "solid",
+        padding: 10,
+        height: '55vh'
+    },
+    expandedRoot: {
+        backgroundColor: "#FFFFFF",
+        border: 3,
+        borderColor: "#FFFFFF",
+        borderRadius: 5,
+        borderStyle: "solid",
+        padding: 10,
+        height: '100%'
     },
     text1: {
         margin: 10
     },
     clientList: {
-        padding: 0
+        backgroundColor: "#FFFFFF",
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        overflow: 'auto'
     },
-    collapseButton: {
-        height: 45,
-        margin: 20
+    clientName: {
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     pagination: {
         display: 'flex',
@@ -56,6 +75,7 @@ function ClientList( ) {
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
     const [ show, setShow ] = React.useState(true);
+    const [ expand, setExpand ] = React.useState(false);
 
     useEffect(( ) => {
         const timeout = setTimeout(( ) => {
@@ -93,6 +113,72 @@ function ClientList( ) {
         });
     }
 
+    const ClientListItem = ({ ...props }) => {
+        const menu = {
+            potential: {
+                labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
+                functions: [
+                    ( ) => dispatch(setSelectedClientId(props.client.id)),
+                    null,
+                    ( ) => exportClient(props.client.id, props.client.clnnme),
+                    null
+                ]
+            },
+            queued: {
+                labels: ["View", "Message Sales Rep.", "Approve", "Decline", "Export", "Cancel"],
+                functions: [
+                    ( ) => dispatch(setSelectedClientId(props.client.id)),
+                    null,
+                    null,
+                    null,
+                    ( ) => exportClient(props.client.id, props.client.clnnme),
+                    null
+                ]
+            },
+            approved: {
+                labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
+                functions: [
+                    ( ) => dispatch(setSelectedClientId(props.client.id)),
+                    null,
+                    ( ) => exportClient(props.client.id, props.client.clnnme),
+                    null
+                ]
+            },
+            active: {
+                labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
+                functions: [
+                    ( ) => dispatch(setSelectedClientId(props.client.id)),
+                    null,
+                    ( ) => exportClient(props.client.id, props.client.clnnme),
+                    null
+                ]
+            },
+        };
+
+        return (
+            <Grid>
+                <ListItem>
+                    <Divider/>
+
+                    <Grid container direction="column">
+                        <ListItemText disableTypography className={classes.clientName}>{props.client.clnnme}</ListItemText>
+                        
+                        <ListItemText inset>{props.client.fstnme} {props.client.lstnme}</ListItemText>
+                    </Grid>
+
+                    <MenuButton
+                        menuItems={menu[props.type].labels}
+                        menuFunctions={menu[props.type].functions}
+                        index={props.key}
+                        actionComp="button"/>
+                </ListItem>
+
+                <Divider/>
+
+            </Grid>
+        );
+    }
+
     const Clients = ({ ...props }) => {
         const [ pageNum, setPageNum ] = React.useState(1);
         const [ viewableClients, setViewableClients ] = React.useState(props.clients.slice(0, 15));
@@ -108,71 +194,56 @@ function ClientList( ) {
 
         if (clientId === null) {
             return (
-                <Collapse in={clientId === null}>
-                    <List className={classes.clientList}>
-                        {viewableClients.map((client, index) => (
-                            <Grid key={index}>
-                                <ListItem>
-                                    <Divider/>
+                <>
+                <List className={classes.clientList}>
+                    {viewableClients.map((client, index) => (
+                        <ClientListItem client={client} key={index} type={props.type}/>
+                    ))}
+                </List>
 
-                                    <ListItemText>{client.clnnme} - {client.fstnme} {client.lstnme}</ListItemText>
+                { expand === false && <Divider/> }
 
-                                    <MenuButton
-                                        menuItems={[
-                                            "View", 
-                                            "Message Sales Rep.",
-                                            "Approve",
-                                            "Decline",
-                                            "Export",
-                                            "Cancel"
-                                        ]}
-                                        menuFunctions={[
-                                            ( ) => dispatch(setSelectedClientId(client.id)),
-                                            null,
-                                            null,
-                                            null,
-                                            ( ) => exportClient(client.id, client.clnnme),
-                                            null
-                                        ]}
-                                        index={index}
-                                        actionComp="button"/>
-                                </ListItem>
-
-                                <Divider/>
-
-                            </Grid>
-                        ))}
-
-                        <Pagination 
-                            page={pageNum}
-                            count={parseInt(props.clients.length / 15) + 1} 
-                            shape="rounded"
-                            onChange={handlePageChange}
-                            className={classes.pagination}/>
-                    </List>
-                </Collapse>
+                <Pagination 
+                    page={pageNum}
+                    count={parseInt(props.clients.length / 15) + 1} 
+                    shape="rounded"
+                    onChange={handlePageChange}
+                    className={classes.pagination}/>
+                </>
             );
         } else {
-            // props.changeTabView( );
+            setExpand(true);
 
             return (
                 <ClientGrid 
                     client={props.clients.find(client => client.id === clientId)}
                     clientId={clientId} 
-                    hideClient={( ) => dispatch(resetState( ))}/>
+                    hideClient={( ) => dispatch(resetState( )) }
+                    shrinkView={( ) => setExpand(false)}/>
             );
         }
     }
 
     return (
-        <Grid container className={classes.root} direction="column">       
+        <Grid 
+            container 
+            className={expand ? classes.expandedRoot : classes.root} 
+            direction="column">       
             <Collapse in={true}>
-                <Grid container direction="row" alignItems="center" justify="center">
+                <Grid container direction="row" alignItems="center" justify="space-between">
                     <Typography>
                     </Typography>
                     <Typography variant="h4" align="center" className={classes.text1}>
-                        Client List
+                        Clients
                     </Typography>
+
+                    <IconButton onClick={( ) => setExpand(!expand)}>
+                        { expand ? 
+                            <FullscreenExitIcon color="secondary" fontSize="large"/>
+                            :
+                            <FullscreenIcon color="secondary" fontSize="large"/>
+                        }
+                    </IconButton>
                 </Grid>
 
                 <Divider/>
@@ -189,7 +260,7 @@ function ClientList( ) {
 
             { show === true && <Progress/>}
 
-            { tabValue === 0 && show === false && <Clients clients={clients.potential}/> }
+            { tabValue === 0 && show === false && <Clients type="potential" clients={clients.potential}/> }
         </Grid>
     );
 }

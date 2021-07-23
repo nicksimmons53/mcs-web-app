@@ -38,7 +38,9 @@ const useStyles = makeStyles({
         justifyContent: 'center',
     },
     root: {
+        display: 'flex',
         flex: 1,
+        flexDirection: 'column',
         padding: 10,
         paddingLeft: 25,
         paddingRight: 25
@@ -100,9 +102,10 @@ function ClientGrid(props) {
                     <IconButton color="secondary" onClick={( ) => {
                         setShow(true);
                         dispatch(props.hideClient( )); 
+                        props.shrinkView( );
                         }}>
                         <ArrowBackIcon fontSize="large"/>
-                    </IconButton>d
+                    </IconButton>
                     <Typography variant="h4" className={classes.headerText}>
                         {props.client.clnnme}
                     </Typography>
@@ -159,7 +162,8 @@ function ClientGrid(props) {
                             className={classes.collapseButton}
                             onClick={( ) => {
                                 setShow(true);
-                                dispatch(props.hideClient( ))
+                                dispatch(props.hideClient( ));
+                                props.shrinkView( );
                             }}>
                             Client List
                         </Button>

@@ -11,11 +11,7 @@ import {
     Typography
 } from '@material-ui/core';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
-import { useSelector } from 'react-redux';
-import { selectAuth0UserInfo, selectUserInfo } from 'features/user/userSlice';
 import colors from 'assets/colors';
-import { Redirect } from 'react-router';
-import { useAuth0 } from '@auth0/auth0-react';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function NavBar( ) {
+function NavBar({ user }) {
     const classes = useStyles( );
-    const user = useSelector(selectUserInfo);
-
+    
     return (
         <Grid container direction="row" className={classes.root} justify="space-between">
             <AppBar position="static" className={classes.navBar}>
@@ -60,15 +55,13 @@ function NavBar( ) {
                             </Badge>
                         </IconButton>
 
-                        <Divider/>
+                        <Divider orientation="vertical" flexItem/>
 
                         <IconButton className={classes.icon}>
                             <Avatar alt={user.name} src={user.picture}/>
                         </IconButton>
 
                         <Typography className={classes.font}>{user.name}</Typography>
-
-                        <Divider orientation="vertical" flexItem/>
                     </Grid>
                 </Toolbar>
             </AppBar>

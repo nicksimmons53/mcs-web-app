@@ -4,7 +4,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import "@fontsource/comfortaa";
 import logo from 'assets/logo_medium.jpeg';
 import colors from 'assets/colors';
-import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
     root: {
