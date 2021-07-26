@@ -78,6 +78,9 @@ const clientsSlice = createSlice({
     name: 'clients',
     initialState: {
         potential: [],
+        queued: [],
+        approved: [],
+        active: [],
         status: 'idle',
         error: null,
         clientStatus: {
@@ -105,6 +108,9 @@ const clientsSlice = createSlice({
         resetState(state) {
             Object.assign(state, {
                 potential: [],
+                queued: [],
+                approved: [],
+                active: [],
                 status: 'idle',
                 error: null,
                 clientStatus: {
@@ -133,7 +139,10 @@ const clientsSlice = createSlice({
         },
         [getPotentialClients.fulfilled]: (state, { payload }) => {
             state.status = 'succeeded';
-            state.potential = payload;
+            state.potential = _.filter(payload, (client) => client.status === 0);
+            state.queued = _.filter(payload, (client) => client.status === 1);
+            state.approved = _.filter(payload, (client) => client.status === 2);
+            state.active = _.filter(payload, (client) => client.status === 3);
         },
         [getPotentialClients.rejected]: (state, action) => {
             state.status = 'failed';

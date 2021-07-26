@@ -10,13 +10,11 @@ User : {
 			teamMember	: boolean,
 			manager		: boolean,
 			Clients 	: {
-				potential	: {
-					main			: CRUD,
-					advancedInfo	: CRUD,
-					programInfo		: CRUD,
-					billingParts	: CRUD,
-					fileAttachments	: CRUD
-				}
+				main			: CRUD,
+				advancedInfo	: CRUD,
+				programInfo		: CRUD,
+				billingParts	: CRUD,
+				fileAttachments	: CRUD
 			}
 		},
 		Administrator : {
@@ -28,5 +26,6 @@ User : {
 			}
 		},
 	},
-	lastLogin : timestamp
+	lastLogin : timestamp,
+	manager: string
 }

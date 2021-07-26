@@ -19,6 +19,7 @@ import BillingPartsInfo from './BillingPartsInfo';
 import Attachments from './Attachments';
 import MenuButton from '../../../../components/MenuButton';
 import clientAPI from 'api/clientAPI';
+import RBAC from 'components/RBAC';
 
 const useStyles = makeStyles({
     collapseButton: {
@@ -56,6 +57,43 @@ function ClientGrid(props) {
     const classes = useStyles();
     const [ selectedView, setSelectedView ] = React.useState(0);
     const [ show, setShow ] = React.useState(true);
+    let user = JSON.parse(localStorage.getItem("user"));
+    const menu = {
+        potential: {
+            labels: ["Message Sales Rep.", "Export", "Cancel"],
+            functions: [
+                null,
+                ( ) => exportClient(props.client.id, props.client.clnnme),
+                null
+            ]
+        },
+        queued: {
+            labels: ["Message Sales Rep.", "Approve", "Decline", "Export", "Cancel"],
+            functions: [
+                null,
+                null,
+                null,
+                ( ) => exportClient(props.client.id, props.client.clnnme),
+                null
+            ]
+        },
+        approved: {
+            labels: ["Message Sales Rep.", "Export", "Cancel"],
+            functions: [
+                null,
+                ( ) => exportClient(props.client.id, props.client.clnnme),
+                null
+            ]
+        },
+        active: {
+            labels: ["Message Sales Rep.", "Export", "Cancel"],
+            functions: [
+                null,
+                ( ) => exportClient(props.client.id, props.client.clnnme),
+                null
+            ]
+        },
+    };
 
     useEffect(( ) => {
         const timeout = setTimeout(( ) => {
@@ -95,7 +133,7 @@ function ClientGrid(props) {
         });
     }
 
-    return (
+    return user !== null && (
         <Collapse in={show === false}>
             <Grid container direction="column" className={classes.root}>
                 <Grid container direction="row" justify="space-between">
@@ -110,20 +148,8 @@ function ClientGrid(props) {
                         {props.client.clnnme}
                     </Typography>
                     <MenuButton
-                        menuItems={[
-                            'Message Sales Rep.',
-                            'Approve',
-                            'Decline',
-                            'Export',
-                            'Cancel'
-                        ]}
-                        menuFunctions={[
-                            null,
-                            null,
-                            null,
-                            ( ) => exportClient(props.clientId, props.client.clnnme),
-                            null
-                        ]}
+                        menuItems={menu[props.type].labels}
+                        menuFunctions={menu[props.type].functions}
                         actionComp="icon"
                         icon={MenuIcon}/>
                 </Grid>
@@ -136,23 +162,31 @@ function ClientGrid(props) {
                 </Collapse>
                 
                 <Collapse in={selectedView === 1}>
-                    <AdvancedInfo clientId={props.clientId} changeView={changeView}/>
+                    <RBAC roles={[ ]} user={user}>
+                        <AdvancedInfo clientId={props.clientId} changeView={changeView}/>
+                    </RBAC>
                 </Collapse>
 
                 <Collapse in={selectedView === 2}>
-                    <ProgramInfo clientId={props.clientId} changeView={changeView}/>
+                    <RBAC roles={[ ]} user={user}>
+                        <ProgramInfo clientId={props.clientId} changeView={changeView}/>
+                    </RBAC>
                 </Collapse>
 
                 <Collapse in={selectedView === 3}>
-                    <BillingPartsInfo clientId={props.clientId} changeView={changeView}/>
+                    <RBAC roles={[ ]} user={user}>
+                        <BillingPartsInfo clientId={props.clientId} changeView={changeView}/>
+                    </RBAC>
                 </Collapse>
-
-                <Modal 
-                    open={selectedView === 4} 
-                    onClose={( ) => changeView(0)}
-                    className={classes.modal}>
-                        <div style={{flex: 1, display: 'flex', justifyContent: 'center'}}><Attachments files={files} changeView={changeView}/></div>
-                </Modal>
+                
+                <RBAC roles={[ ]} user={user}>
+                    <Modal 
+                        open={selectedView === 4} 
+                        onClose={( ) => changeView(0)}
+                        className={classes.modal}>
+                            <div style={{flex: 1, display: 'flex', justifyContent: 'center'}}><Attachments files={files} changeView={changeView}/></div>
+                    </Modal>
+                </RBAC>
 
                 { selectedView === 0 &&
                     <Grid container direction="column" justify="center" alignItems="center">

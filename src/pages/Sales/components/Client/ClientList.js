@@ -20,10 +20,9 @@ import { getPotentialClients, selectAllClients } from 'features/client/clientsSl
 import { selectedClientId, setSelectedClientId } from 'features/client/clientsSlice';
 import { resetState } from 'features/client/clientsSlice';
 import clientAPI from 'api/clientAPI';
-import MenuButton from '../../../../components/MenuButton';
+import MenuButton from 'components/MenuButton';
 import ClientGrid from './ClientGrid';
 import Progress from 'components/Progress';
-import colors from 'assets/colors';
 
 const useStyles = makeStyles({
     root: {
@@ -112,7 +111,7 @@ function ClientList( ) {
             files: true
         });
     }
-
+    
     const ClientListItem = ({ ...props }) => {
         const menu = {
             potential: {
@@ -174,7 +173,6 @@ function ClientList( ) {
                 </ListItem>
 
                 <Divider/>
-
             </Grid>
         );
     }
@@ -218,6 +216,7 @@ function ClientList( ) {
                 <ClientGrid 
                     client={props.clients.find(client => client.id === clientId)}
                     clientId={clientId} 
+                    type={props.type}
                     hideClient={( ) => dispatch(resetState( )) }
                     shrinkView={( ) => setExpand(false)}/>
             );
@@ -261,6 +260,12 @@ function ClientList( ) {
             { show === true && <Progress/>}
 
             { tabValue === 0 && show === false && <Clients type="potential" clients={clients.potential}/> }
+
+            { tabValue === 1 && show === false && <Clients type="queued" clients={clients.queued}/> }
+
+            { tabValue === 2 && show === false && <Clients type="approved" clients={clients.approved}/> }
+
+            { tabValue === 3 && show === false && <Clients type="active" clients={clients.active}/> }
         </Grid>
     );
 }

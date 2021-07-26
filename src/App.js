@@ -16,7 +16,7 @@ import colors from 'assets/colors';
 const theme = createMuiTheme({
   palette: {
       primary: {
-        main: colors.ghost_white
+        main: colors.gunmetal
       },
       secondary: {
         main: colors.burnt_sienna

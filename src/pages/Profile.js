@@ -17,6 +17,7 @@ import {
     Route
 } from 'react-router-dom';
 import Sales from 'pages/Sales/Sales';
+import UserAdd from './Admin/UserAdd';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -72,7 +73,9 @@ function Profile( ) {
                 <Switch>
                     <Route path="/profile/modules/sales" component={Sales}/>
                     
-                    <Route path="/settings" component={Loading}/>
+                    <Route path="/profile/settings" component={Loading}/>
+
+                    <Route path="/profile/admin/add_user" component={UserAdd}/>
                 </Switch>
             </Grid>
         </Grid>

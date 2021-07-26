@@ -125,17 +125,19 @@ function NavDrawer({ user }) {
           <Divider/>
 
           <ListItem 
-            button
-            selected={location.pathname === "/admin/user/add"}
-            className={location.pathname === "/admin/user/add" ? classes.selected : null}>
+            component={Link}
+            selected={location.pathname === "/profile/admin/add_user"}
+            className={location.pathname === "/profile/admin/add_user" ? classes.selected : null}
+            to="/profile/admin/add_user">
             <ListItemText primary="Add User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
 
           <ListItem 
-            button
-            selected={location.pathname === "/admin/user/edit"}
-            className={location.pathname === "/admin/user/edit" ? classes.selected : null}>
+            component={Link}
+            selected={location.pathname === "/profile/admin/edit_user"}
+            className={location.pathname === "/profile/admin/edit_user" ? classes.selected : null}
+            to="/profile/admin/edit_user">
             <ListItemText primary="Edit User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
