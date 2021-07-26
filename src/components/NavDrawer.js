@@ -12,11 +12,13 @@ import {
   makeStyles, 
   Typography
 } from '@material-ui/core';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import PeopleIcon from '@material-ui/icons/People';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
@@ -96,6 +98,34 @@ function NavDrawer({ user }) {
   const UserModules = ( ) => {
     return (
       <List disablePadding>
+        <RBAC user={user} roles={[ ]}>
+          <ListItem 
+            button 
+            component={Link}
+            to="/profile/modules/accounting"
+            selected={location.pathname === "/profile/modules/accounting"}
+            className={location.pathname === "/profile/modules/accounting" ? classes.selectedUserModule : classes.moduleItem}>
+            <ListItemIcon>
+              <AccountBalanceIcon fontSize="large" className={classes.listItem}/>
+            </ListItemIcon>
+            <ListItemText primary="Accounting" className={classes.userModuleItem}/>
+          </ListItem>
+        </RBAC>
+
+        <RBAC user={user} roles={[ ]}>
+          <ListItem 
+            button 
+            component={Link}
+            to="/profile/modules/expediting"
+            selected={location.pathname === "/profile/modules/expediting"}
+            className={location.pathname === "/profile/modules/expediting" ? classes.selectedUserModule : classes.moduleItem}>
+            <ListItemIcon>
+              <ScheduleIcon fontSize="large" className={classes.listItem}/>
+            </ListItemIcon>
+            <ListItemText primary="Expediting" className={classes.userModuleItem}/>
+          </ListItem>
+        </RBAC>
+
         <RBAC user={user} roles={["Sales.Allowed"]}>
           <ListItem 
             button 
@@ -109,7 +139,6 @@ function NavDrawer({ user }) {
             <ListItemText primary="Sales" className={classes.userModuleItem}/>
           </ListItem>
         </RBAC>
-
       </List>
     );
   };
@@ -223,9 +252,9 @@ function NavDrawer({ user }) {
 
           <ListItem 
             component={Link} 
-            selected={location.pathname === "/settings"}
-            className={location.pathname === "/settings" ? classes.selected : null}
-            to="/settings">
+            selected={location.pathname === "/profile/settings"}
+            className={location.pathname === "/profile/settings" ? classes.selected : null}
+            to="/profile/settings">
             <ListItemIcon>
               <SettingsIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>

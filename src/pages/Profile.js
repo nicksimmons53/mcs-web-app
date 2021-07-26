@@ -71,6 +71,10 @@ function Profile( ) {
 
             <Grid className={classes.content}>
                 <Switch>
+                    <Route path="/profile/modules/accounting" component={Loading}/>
+
+                    <Route path="/profile/modules/expediting" component={Loading}/>
+
                     <Route path="/profile/modules/sales" component={Sales}/>
                     
                     <Route path="/profile/settings" component={Loading}/>
