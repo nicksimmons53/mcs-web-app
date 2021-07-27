@@ -83,7 +83,7 @@ function UserAdd( ) {
 
                 <Grid className={classes.form2}>
                     <Grid container direction="row" justify="center">
-                        <Button onClick={( ) => showAlert(true)}>Save</Button>
+                        <Button>Save</Button>
                     </Grid>
                 </Grid>   
             </Grid>
