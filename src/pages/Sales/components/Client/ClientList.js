@@ -22,7 +22,6 @@ import { resetState } from 'features/client/clientsSlice';
 import clientAPI from 'api/clientAPI';
 import MenuButton from 'components/MenuButton';
 import ClientGrid from './ClientGrid';
-import Progress from 'components/Progress';
 
 const useStyles = makeStyles({
     root: {
@@ -31,8 +30,11 @@ const useStyles = makeStyles({
         borderColor: "#FFFFFF",
         borderRadius: 10,
         borderStyle: "solid",
+        display: 'flex',
+        flex: 2,
+        margin: 25,
         padding: 10,
-        height: '55vh'
+        height: '55vh',
     },
     expandedRoot: {
         backgroundColor: "#FFFFFF",
