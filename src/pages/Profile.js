@@ -11,11 +11,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import Login from './Login';
 import Loading from 'components/Loading';
 import userAPI from 'api/userAPI';
-import { 
-    BrowserRouter as Router,
-    Switch, 
-    Route
-} from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Sales from 'pages/Sales/Sales';
 import UserAdd from './Admin/UserAdd';
 

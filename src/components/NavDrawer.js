@@ -22,6 +22,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import "@fontsource/comfortaa";
+import "@fontsource/montserrat";
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import logo from 'assets/logo.png';
@@ -60,13 +61,17 @@ const useStyles = makeStyles((theme) => ({
   },
   listItem: {
     color: colors.ghost_white,
+    fontFamily: 'Montserrat',
   },
   listSubheader: {
     color: colors.ghost_white,
-    fontSize: 18
+    fontFamily: 'Montserrat',
+    fontSize: 18,
+    fontWeight: 'bold'
   },
   userModuleItem: {
-    color: colors.ghost_white
+    color: colors.ghost_white,
+    fontFamily: 'Montserrat',
   },
   moduleItem: {
     marginLeft: '10%'
@@ -108,7 +113,7 @@ function NavDrawer({ user }) {
             <ListItemIcon>
               <AccountBalanceIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
-            <ListItemText primary="Accounting" className={classes.userModuleItem}/>
+            <ListItemText disableTypography primary="Accounting" className={classes.userModuleItem}/>
           </ListItem>
         </RBAC>
 
@@ -122,7 +127,7 @@ function NavDrawer({ user }) {
             <ListItemIcon>
               <ScheduleIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
-            <ListItemText primary="Expediting" className={classes.userModuleItem}/>
+            <ListItemText disableTypography primary="Expediting" className={classes.userModuleItem}/>
           </ListItem>
         </RBAC>
 
@@ -136,7 +141,7 @@ function NavDrawer({ user }) {
             <ListItemIcon>
               <PeopleIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
-            <ListItemText primary="Sales" className={classes.userModuleItem}/>
+            <ListItemText disableTypography primary="Sales" className={classes.userModuleItem}/>
           </ListItem>
         </RBAC>
       </List>
@@ -148,7 +153,7 @@ function NavDrawer({ user }) {
       <RBAC user={user} roles={[ ]}>
         <div>
           <ListSubheader className={classes.listSubheader}>
-            User Actions
+            USER ACTIONS
           </ListSubheader>
 
           <Divider/>
@@ -158,7 +163,7 @@ function NavDrawer({ user }) {
             selected={location.pathname === "/profile/admin/add_user"}
             className={location.pathname === "/profile/admin/add_user" ? classes.selected : null}
             to="/profile/admin/add_user">
-            <ListItemText primary="Add User" className={classes.listItem}/>
+            <ListItemText disableTypography primary="Add User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
 
@@ -167,7 +172,7 @@ function NavDrawer({ user }) {
             selected={location.pathname === "/profile/admin/edit_user"}
             className={location.pathname === "/profile/admin/edit_user" ? classes.selected : null}
             to="/profile/admin/edit_user">
-            <ListItemText primary="Edit User" className={classes.listItem}/>
+            <ListItemText disableTypography primary="Edit User" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
 
@@ -181,7 +186,7 @@ function NavDrawer({ user }) {
     return (
       <div>
         <ListSubheader className={classes.listSubheader}>
-            Profile Actions
+            PROFILE ACTIONS
           </ListSubheader>
 
           <Divider/>
@@ -189,7 +194,7 @@ function NavDrawer({ user }) {
           <ListItem 
             button
             onClick={( ) => logoutAndClear( )}>
-            <ListItemText primary="Logout" className={classes.listItem}/>
+            <ListItemText disableTypography primary="Logout" className={classes.listItem}/>
             <ArrowForwardIosIcon className={classes.listItem}/>
           </ListItem>
       </div>
@@ -215,7 +220,7 @@ function NavDrawer({ user }) {
           <Divider/>
 
           <ListSubheader className={classes.listSubheader}>
-            Navigation
+            NAVIGATION
           </ListSubheader>
 
           <Divider/>
@@ -229,7 +234,7 @@ function NavDrawer({ user }) {
               <AssessmentIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
 
-            <ListItemText primary="Dashboard" className={classes.listItem}/>
+            <ListItemText disableTypography primary="Dashboard" className={classes.listItem}/>
           </ListItem>
 
           <ListItem onClick={( ) => setOpen(!open)}>
@@ -237,7 +242,7 @@ function NavDrawer({ user }) {
               <ViewModuleIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
 
-            <ListItemText primary="User Modules" className={classes.listItem}/>
+            <ListItemText disableTypography primary="User Modules" className={classes.listItem}/>
 
             { open ? 
               <ExpandLess fontSize="large" className={classes.listItem}/>
@@ -259,7 +264,7 @@ function NavDrawer({ user }) {
               <SettingsIcon fontSize="large" className={classes.listItem}/>
             </ListItemIcon>
 
-            <ListItemText primary="Profile Settings" className={classes.listItem}/>
+            <ListItemText disableTypography primary="Profile Settings" className={classes.listItem}/>
           </ListItem>
 
           <Divider/>

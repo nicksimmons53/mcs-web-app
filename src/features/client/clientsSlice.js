@@ -215,7 +215,15 @@ const clientsSlice = createSlice({
             state.clientStatus.advancedInfo = 'loading';
         },
         [getClientInfo.fulfilled]: (state, { payload }) => {   
-            let clientInfo = payload[0]; 
+            let clientInfo = payload[0];
+            
+            if (typeof clientInfo === "undefined") {
+                state.clientStatus.advancedInfo = 'succeeded';
+                state.selected.advancedInfo = [];
+
+                return;
+            }
+
             let address = formatAddress([clientInfo.invoice_addr, clientInfo.invoice_city, clientInfo.invoice_state, clientInfo.invoice_zip]);
             clientInfo = formatTinyInt(clientInfo);
 

@@ -29,7 +29,7 @@ const useStyles = makeStyles({
         backgroundColor: "#FFFFFF",
         border: 3,
         borderColor: "#FFFFFF",
-        borderRadius: 5,
+        borderRadius: 10,
         borderStyle: "solid",
         padding: 10,
         height: '55vh'
@@ -73,16 +73,7 @@ function ClientList( ) {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [ tabValue, setTabValue ] = React.useState(0);
-    const [ show, setShow ] = React.useState(true);
     const [ expand, setExpand ] = React.useState(false);
-
-    useEffect(( ) => {
-        const timeout = setTimeout(( ) => {
-            setShow(false);
-        }, 1500);
-
-        return ( ) => clearTimeout(timeout);
-    }, [ ]);
 
     // Redux Data
     const clientStatus = useSelector(state => state.clients.status);
@@ -223,16 +214,14 @@ function ClientList( ) {
         }
     }
 
-    return (
+    return clients !== null && (
         <Grid 
             container 
             className={expand ? classes.expandedRoot : classes.root} 
             direction="column">       
             <Collapse in={true}>
                 <Grid container direction="row" alignItems="center" justify="space-between">
-                    <Typography>
-                    </Typography>
-                    <Typography variant="h4" align="center" className={classes.text1}>
+                    <Typography variant="h4" className={classes.text1}>
                         Clients
                     </Typography>
 
@@ -257,15 +246,13 @@ function ClientList( ) {
                 <Divider/>
             </Collapse>
 
-            { show === true && <Progress/>}
+            { tabValue === 0 && <Clients type="potential" clients={clients.potential}/> }
 
-            { tabValue === 0 && show === false && <Clients type="potential" clients={clients.potential}/> }
+            { tabValue === 1 && <Clients type="queued" clients={clients.queued}/> }
 
-            { tabValue === 1 && show === false && <Clients type="queued" clients={clients.queued}/> }
+            { tabValue === 2 && <Clients type="approved" clients={clients.approved}/> }
 
-            { tabValue === 2 && show === false && <Clients type="approved" clients={clients.approved}/> }
-
-            { tabValue === 3 && show === false && <Clients type="active" clients={clients.active}/> }
+            { tabValue === 3 && <Clients type="active" clients={clients.active}/> }
         </Grid>
     );
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
     Grid, 
-    makeStyles
+    makeStyles,
+    Typography
 } from '@material-ui/core';
 import RBAC from 'components/RBAC';
 import ClientList from './components/Client/ClientList';
