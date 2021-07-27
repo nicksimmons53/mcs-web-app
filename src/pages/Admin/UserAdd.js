@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Divider, FormControl, Grid, InputLabel, makeStyles, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import colors from 'assets/colors';
+import SnackbarNoti from 'components/SnackbarNoti';
 
 const useStyles = makeStyles({
     root: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles({
 
 function UserAdd( ) {
     const classes = useStyles( );
+
     // const { } = useForm( );
 
     return (
@@ -81,7 +83,7 @@ function UserAdd( ) {
 
                 <Grid className={classes.form2}>
                     <Grid container direction="row" justify="center">
-                        <Button>Save</Button>
+                        <Button onClick={( ) => showAlert(true)}>Save</Button>
                     </Grid>
                 </Grid>   
             </Grid>
