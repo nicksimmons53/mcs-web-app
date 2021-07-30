@@ -4,11 +4,13 @@ import {
     Card,
     Divider,
     Grid,
+    makeStyles,
     Tab,
     Tabs,
     Typography
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
+import "@fontsource/montserrat";
 import { useSelector, useDispatch } from 'react-redux';
 import { getClientParts, selectClientParts } from 'features/client/clientsSlice';
 import _ from 'lodash';
@@ -17,9 +19,20 @@ import {
     fullColumn, descTotalColumn, levelTotalColumn, descUnitTotalColumn, 
     levelUnitTotalColumn, typeTotalColumn, typeColorTotalColumn,
 } from '../../static_data';
+import TabMenu from 'components/TabMenu';
+
+const useStyles = makeStyles({
+    tableHeader: {
+        fontFamily: 'Montserrat',
+        fontWeight: 'bold',
+        margin: 10
+    }
+})
 
 const BillingPartsInfo = ({...props}) => {
+    const classes = useStyles( );
     const dispatch = useDispatch();
+    const tabs = ["Carpet", "Countertop", "Tile", "Vinyl", "Wood"];
     const [ tabValue, setTabValue ] = React.useState(0);
     
     const carpetColumns = {
@@ -93,7 +106,7 @@ const BillingPartsInfo = ({...props}) => {
                         {
                             Object.keys(parts[2]).map((table, index) => (
                                 <Card raised key={index} style={{marginBottom: 10, marginTop: 10}}>
-                                    <Typography variant="h5" align="center" style={{margin:10}}>{table}</Typography>
+                                    <Typography variant="h5" align="center" className={classes.tableHeader}>{table}</Typography>
                                     <DataGrid 
                                         autoHeight
                                         rows={parts[2][table]} 
@@ -180,33 +193,10 @@ const BillingPartsInfo = ({...props}) => {
         <Grid>
             <Divider style={{marginBottom: 10}}/>
 
-            <Typography variant="h6" align="center">Billing Parts</Typography>
+            <Typography variant="h6" align="center" className={classes.tableHeader}>Billing Parts</Typography>
 
             <Grid container direction="column" alignItems="center">
-                <Tabs value={tabValue} indicatorColor="secondary" onChange={handleTabChange}>
-                    <Tab label="Carpet"/>
-                    <Tab label="Countertop"/>
-                    <Tab label="Tile"/>
-                    <Tab label="Vinyl"/>
-                    <Tab label="Wood"/>
-                </Tabs>
-            </Grid>
-
-            {renderedContent}
-
-            <Divider style={{marginTop: 50}}/>
-            
-            <Grid container alignItems="center" justify="center">
-                <Button 
-                    variant="contained" 
-                    color="secondary" 
-                    onClick={( ) => {
-                        props.changeView(0);
-                        setTabValue(0);
-                    }}
-                    style={{margin: 30, width: 250}}>
-                    Client Home
-                </Button>
+                <TabMenu tabs={tabs} value={tabValue} setValue={setTabValue}/>
             </Grid>
         </Grid>
     );

@@ -4,13 +4,14 @@ import {
     makeStyles
 } from '@material-ui/core';
 import RBAC from 'components/RBAC';
-import ClientList from './components/Client/ClientList';
 import PricingList from './components/Pricing/PricingList';
+import Client from './components/Client/Client';
+import Pricing from './components/Pricing/Pricing';
 
 const useStyles = makeStyles({
     root: {
         display: 'flex',
-        padding: 50
+        padding: 25
     }
 });
 
@@ -21,11 +22,10 @@ function Sales( ) {
     return user !== null && (
         <Grid container direction="row" className={classes.root}>
             <RBAC roles={[ ]} user={user}>
-                <ClientList/>
+                <Client/>
             </RBAC>
-
             <RBAC roles={[ ]} user={user}>
-                <PricingList/>
+                <Pricing/>
             </RBAC>
         </Grid>
     );

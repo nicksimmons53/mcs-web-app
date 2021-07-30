@@ -103,6 +103,8 @@ function NavDrawer({ user }) {
   const UserModules = ( ) => {
     return (
       <List disablePadding>
+        <Divider/>
+
         <RBAC user={user} roles={[ ]}>
           <ListItem 
             button 
@@ -111,7 +113,7 @@ function NavDrawer({ user }) {
             selected={location.pathname === "/profile/modules/accounting"}
             className={location.pathname === "/profile/modules/accounting" ? classes.selectedUserModule : classes.moduleItem}>
             <ListItemIcon>
-              <AccountBalanceIcon fontSize="large" className={classes.listItem}/>
+              <AccountBalanceIcon className={classes.listItem}/>
             </ListItemIcon>
             <ListItemText disableTypography primary="Accounting" className={classes.userModuleItem}/>
           </ListItem>
@@ -125,7 +127,7 @@ function NavDrawer({ user }) {
             selected={location.pathname === "/profile/modules/expediting"}
             className={location.pathname === "/profile/modules/expediting" ? classes.selectedUserModule : classes.moduleItem}>
             <ListItemIcon>
-              <ScheduleIcon fontSize="large" className={classes.listItem}/>
+              <ScheduleIcon inherit className={classes.listItem}/>
             </ListItemIcon>
             <ListItemText disableTypography primary="Expediting" className={classes.userModuleItem}/>
           </ListItem>
@@ -139,7 +141,7 @@ function NavDrawer({ user }) {
             selected={location.pathname === "/profile/modules/sales"}
             className={location.pathname === "/profile/modules/sales" ? classes.selectedUserModule : classes.moduleItem}>
             <ListItemIcon>
-              <PeopleIcon fontSize="large" className={classes.listItem}/>
+              <PeopleIcon inherit className={classes.listItem}/>
             </ListItemIcon>
             <ListItemText disableTypography primary="Sales" className={classes.userModuleItem}/>
           </ListItem>
@@ -152,6 +154,8 @@ function NavDrawer({ user }) {
     return (
       <RBAC user={user} roles={[ ]}>
         <div>
+          <Divider/>
+
           <ListSubheader className={classes.listSubheader}>
             USER ACTIONS
           </ListSubheader>
@@ -164,7 +168,7 @@ function NavDrawer({ user }) {
             className={location.pathname === "/profile/admin/add_user" ? classes.selected : null}
             to="/profile/admin/add_user">
             <ListItemText disableTypography primary="Add User" className={classes.listItem}/>
-            <ArrowForwardIosIcon className={classes.listItem}/>
+            <ArrowForwardIosIcon inherit className={classes.listItem}/>
           </ListItem>
 
           <ListItem 
@@ -173,7 +177,7 @@ function NavDrawer({ user }) {
             className={location.pathname === "/profile/admin/edit_user" ? classes.selected : null}
             to="/profile/admin/edit_user">
             <ListItemText disableTypography primary="Edit User" className={classes.listItem}/>
-            <ArrowForwardIosIcon className={classes.listItem}/>
+            <ArrowForwardIosIcon inherit className={classes.listItem}/>
           </ListItem>
 
           <Divider/>
@@ -186,17 +190,17 @@ function NavDrawer({ user }) {
     return (
       <div>
         <ListSubheader className={classes.listSubheader}>
-            PROFILE ACTIONS
-          </ListSubheader>
+          PROFILE ACTIONS
+        </ListSubheader>
 
-          <Divider/>
+        <Divider/>
 
-          <ListItem 
-            button
-            onClick={( ) => logoutAndClear( )}>
-            <ListItemText disableTypography primary="Logout" className={classes.listItem}/>
-            <ArrowForwardIosIcon className={classes.listItem}/>
-          </ListItem>
+        <ListItem 
+          button
+          onClick={( ) => logoutAndClear( )}>
+          <ListItemText disableTypography primary="Logout" className={classes.listItem}/>
+          <ArrowForwardIosIcon inherit className={classes.listItem}/>
+        </ListItem>
       </div>
     );
   }
@@ -231,7 +235,7 @@ function NavDrawer({ user }) {
             className={location.pathname === "/profile" ? classes.selected : null}
             to="/profile">
             <ListItemIcon>
-              <AssessmentIcon fontSize="large" className={classes.listItem}/>
+              <AssessmentIcon inherit className={classes.listItem}/>
             </ListItemIcon>
 
             <ListItemText disableTypography primary="Dashboard" className={classes.listItem}/>
@@ -239,7 +243,7 @@ function NavDrawer({ user }) {
 
           <ListItem onClick={( ) => setOpen(!open)}>
             <ListItemIcon>
-              <ViewModuleIcon fontSize="large" className={classes.listItem}/>
+              <ViewModuleIcon inherit className={classes.listItem}/>
             </ListItemIcon>
 
             <ListItemText disableTypography primary="User Modules" className={classes.listItem}/>
@@ -261,7 +265,7 @@ function NavDrawer({ user }) {
             className={location.pathname === "/profile/settings" ? classes.selected : null}
             to="/profile/settings">
             <ListItemIcon>
-              <SettingsIcon fontSize="large" className={classes.listItem}/>
+              <SettingsIcon inherit className={classes.listItem}/>
             </ListItemIcon>
 
             <ListItemText disableTypography primary="Profile Settings" className={classes.listItem}/>

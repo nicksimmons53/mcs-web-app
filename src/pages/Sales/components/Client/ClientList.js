@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react';
 import { 
-    Collapse,
     Divider,
     Grid, 
-    IconButton, 
     List, 
     ListItem, 
     ListItemText,
-    makeStyles,
-    Tab,
-    Tabs,
-    Typography
+    makeStyles
 } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
+import '@fontsource/montserrat';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPotentialClients, selectAllClients } from 'features/client/clientsSlice';
 import { selectedClientId, setSelectedClientId } from 'features/client/clientsSlice';
@@ -22,42 +16,28 @@ import { resetState } from 'features/client/clientsSlice';
 import clientAPI from 'api/clientAPI';
 import MenuButton from 'components/MenuButton';
 import ClientGrid from './ClientGrid';
+import TabMenu from 'components/TabMenu';
 
 const useStyles = makeStyles({
     root: {
-        backgroundColor: "#FFFFFF",
-        border: 3,
-        borderColor: "#FFFFFF",
-        borderRadius: 10,
-        borderStyle: "solid",
-        display: 'flex',
-        flex: 2,
-        margin: 25,
-        padding: 10,
-        height: '55vh',
+        height: 500
     },
     expandedRoot: {
-        backgroundColor: "#FFFFFF",
-        border: 3,
-        borderColor: "#FFFFFF",
-        borderRadius: 5,
-        borderStyle: "solid",
-        padding: 10,
-        height: '100%'
+        height: 940
     },
-    text1: {
-        margin: 10
-    },
-    clientList: {
+    list: {
         backgroundColor: "#FFFFFF",
-        display: 'flex',
-        flexDirection: 'column',
         flex: 1,
-        overflow: 'auto'
+        overflowY: 'scroll'
     },
     clientName: {
-        fontSize: 18,
-        fontWeight: 'bold'
+        flex: 1,
+        fontFamily: 'Montserrat',
+        fontSize: 18
+    },
+    text2: {
+        flex: 1,
+        fontFamily: 'Montserrat'
     },
     pagination: {
         display: 'flex',
@@ -70,24 +50,24 @@ const useStyles = makeStyles({
     }
 });
 
-function ClientList( ) {
+function ClientList( props ) {
     // Hooks
     const dispatch = useDispatch();
     const classes = useStyles();
+    const tabs = ["Potential", "Queued", "Approved", "Active"];
     const [ tabValue, setTabValue ] = React.useState(0);
-    const [ expand, setExpand ] = React.useState(false);
+    const [ pageNum, setPageNum ] = React.useState(1);
 
     // Redux Data
     const clientStatus = useSelector(state => state.clients.status);
     const clients = useSelector(selectAllClients);
+    const clientId = useSelector(selectedClientId);
     
     useEffect(( ) => {
         if (clientStatus === 'idle') {
             dispatch(getPotentialClients( ));
         }
     }, [ clientStatus, dispatch ]);
-
-    const handleTabChange = (event, newValue) => { setTabValue(newValue) }
 
     const exportClient = (id, clientName) => {
         let regex = /\s/g;
@@ -104,10 +84,15 @@ function ClientList( ) {
             files: true
         });
     }
+
+    const handlePageChange = (event, value) => { 
+        setPageNum(value);
+        window.scrollTo(0, 0);
+    }
     
     const ClientListItem = ({ ...props }) => {
         const menu = {
-            potential: {
+            Potential: {
                 labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
                 functions: [
                     ( ) => dispatch(setSelectedClientId(props.client.id)),
@@ -116,7 +101,7 @@ function ClientList( ) {
                     null
                 ]
             },
-            queued: {
+            Queued: {
                 labels: ["View", "Message Sales Rep.", "Approve", "Decline", "Export", "Cancel"],
                 functions: [
                     ( ) => dispatch(setSelectedClientId(props.client.id)),
@@ -127,7 +112,7 @@ function ClientList( ) {
                     null
                 ]
             },
-            approved: {
+            Approved: {
                 labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
                 functions: [
                     ( ) => dispatch(setSelectedClientId(props.client.id)),
@@ -136,7 +121,7 @@ function ClientList( ) {
                     null
                 ]
             },
-            active: {
+            Active: {
                 labels: ["View", "Message Sales Rep.", "Export", "Cancel"],
                 functions: [
                     ( ) => dispatch(setSelectedClientId(props.client.id)),
@@ -146,115 +131,75 @@ function ClientList( ) {
                 ]
             },
         };
-
+        
         return (
-            <Grid>
-                <ListItem>
-                    <Divider/>
+            <ListItem divider>
+                <ListItemText 
+                    disableTypography 
+                    className={classes.clientName}>
+                        {props.client.clnnme}
+                </ListItemText>
 
-                    <Grid container direction="column">
-                        <ListItemText disableTypography className={classes.clientName}>{props.client.clnnme}</ListItemText>
-                        
-                        <ListItemText inset>{props.client.fstnme} {props.client.lstnme}</ListItemText>
-                    </Grid>
-
-                    <MenuButton
-                        menuItems={menu[props.type].labels}
-                        menuFunctions={menu[props.type].functions}
-                        index={props.key}
-                        actionComp="button"/>
-                </ListItem>
-
-                <Divider/>
-            </Grid>
+                <ListItemText 
+                    disableTypography 
+                    className={classes.text2}>
+                        {props.client.fstnme} {props.client.lstnme}
+                </ListItemText>
+            
+                <MenuButton
+                    menuItems={menu[props.type].labels}
+                    menuFunctions={menu[props.type].functions}
+                    index={props.key}
+                    actionComp="button"/>
+            </ListItem>
         );
     }
 
-    const Clients = ({ ...props }) => {
-        const [ pageNum, setPageNum ] = React.useState(1);
-        const [ viewableClients, setViewableClients ] = React.useState(props.clients.slice(0, 15));
-
-        // Redux
-        const clientId = useSelector(selectedClientId);
-
-        const handlePageChange = (event, value) => { 
-            setPageNum(value);
-            setViewableClients(props.clients.slice((value - 1) * 16, (value * 16) - 1));
-            window.scrollTo(0, 0);
-        }
-
-        if (clientId === null) {
-            return (
-                <>
-                <List className={classes.clientList}>
-                    {viewableClients.map((client, index) => (
-                        <ClientListItem client={client} key={index} type={props.type}/>
-                    ))}
-                </List>
-
-                { expand === false && <Divider/> }
-
-                <Pagination 
-                    page={pageNum}
-                    count={parseInt(props.clients.length / 15) + 1} 
-                    shape="rounded"
-                    onChange={handlePageChange}
-                    className={classes.pagination}/>
-                </>
-            );
-        } else {
-            setExpand(true);
-
-            return (
-                <ClientGrid 
-                    client={props.clients.find(client => client.id === clientId)}
-                    clientId={clientId} 
-                    type={props.type}
-                    hideClient={( ) => dispatch(resetState( )) }
-                    shrinkView={( ) => setExpand(false)}/>
-            );
-        }
+    const Clients = (props) => {
+        let page = props.page;
+        const [ clients, setClients ] = React.useState(props.clients.slice((page - 1) * 16, (page * 16) -1));
+        
+        return (
+            <List className={classes.list}>
+                {clients.map((client, index) => (
+                    <ClientListItem client={client} key={index} type={props.type}/>
+                ))}
+            </List>
+        )
+    }
+        
+    if (clientId !== null) {
+        return (
+            <ClientGrid 
+                client={clients[tabs[tabValue].toLowerCase( )].find(client => client.id === clientId)}
+                clientId={clientId} 
+                type={tabs[tabValue].toLowerCase( )}
+                hideClient={( ) => dispatch(resetState( )) }/>
+        )
     }
 
     return clients !== null && (
-        <Grid 
-            container 
-            className={expand ? classes.expandedRoot : classes.root} 
-            direction="column">       
-            <Collapse in={true}>
-                <Grid container direction="row" alignItems="center" justify="space-between">
-                    <Typography variant="h4" className={classes.text1}>
-                        Clients
-                    </Typography>
+        <Grid container direction="column" className={props.expand ? classes.expandedRoot : classes.root}>
+            <TabMenu tabs={tabs} value={tabValue} setValue={setTabValue}/>
 
-                    <IconButton onClick={( ) => setExpand(!expand)}>
-                        { expand ? 
-                            <FullscreenExitIcon color="secondary" fontSize="large"/>
-                            :
-                            <FullscreenIcon color="secondary" fontSize="large"/>
-                        }
-                    </IconButton>
-                </Grid>
+            <Divider/>
 
-                <Divider/>
+            { tabValue === 0 && <Clients clients={clients.potential} type="Potential" page={pageNum}/> }
 
-                <Tabs centered value={tabValue} indicatorColor="secondary" onChange={handleTabChange}> 
-                    <Tab label="Potential"/>
-                    <Tab label="Queued"/>
-                    <Tab label="Approved"/>
-                    <Tab label="Active"/>
-                </Tabs>
+            { tabValue === 1 && <Clients clients={clients.queued} type="Queued" page={pageNum}/> }
 
-                <Divider/>
-            </Collapse>
+            { tabValue === 2 && <Clients clients={clients.approved} type="Approved" page={pageNum}/> }
 
-            { tabValue === 0 && <Clients type="potential" clients={clients.potential}/> }
+            { tabValue === 3 && <Clients clients={clients.active} type="Active" page={pageNum}/> }
 
-            { tabValue === 1 && <Clients type="queued" clients={clients.queued}/> }
+            <Divider/>
 
-            { tabValue === 2 && <Clients type="approved" clients={clients.approved}/> }
-
-            { tabValue === 3 && <Clients type="active" clients={clients.active}/> }
+            <Pagination 
+                    page={pageNum}
+                    count={parseInt(clients[tabs[tabValue].toLowerCase( )].length / 15) + 1}
+                    shape="rounded"
+                    className={classes.pagination}
+                    onChange={handlePageChange}/>
         </Grid>
     );
 }

@@ -46,12 +46,13 @@ const MenuButton = ({...props}) => {
     });
 
     return (
-        <div> 
+        <> 
             {props.actionComp === "button" && 
                 <Button 
                     variant="contained" 
                     color="secondary"
-                    onClick={handleClick}>
+                    onClick={handleClick}
+                    style={{ width: '15%' }}>
                     Actions
                 </Button>
             }
@@ -72,7 +73,7 @@ const MenuButton = ({...props}) => {
                 <ListItems {...props}/>
 
             </Menu>
-        </div>
+        </>
     );
 };
 

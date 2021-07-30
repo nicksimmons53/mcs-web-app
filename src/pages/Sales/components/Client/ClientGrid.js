@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import "@fontsource/montserrat";
 import { useDispatch, useSelector } from 'react-redux';
 import { getClientFiles, selectClientFiles } from 'features/client/clientsSlice';
 import GeneralInfo from './GeneralInfo';
@@ -28,6 +29,7 @@ const useStyles = makeStyles({
         minWidth: 300
     },
     headerText: {
+        fontFamily: 'Montserrat',
         margin: 10,
         marginBottom: 20,
         textAlign: 'center'
@@ -140,7 +142,6 @@ function ClientGrid(props) {
                     <IconButton color="secondary" onClick={( ) => {
                         setShow(true);
                         dispatch(props.hideClient( )); 
-                        props.shrinkView( );
                         }}>
                         <ArrowBackIcon fontSize="large"/>
                     </IconButton>
@@ -197,7 +198,6 @@ function ClientGrid(props) {
                             onClick={( ) => {
                                 setShow(true);
                                 dispatch(props.hideClient( ));
-                                props.shrinkView( );
                             }}>
                             Client List
                         </Button>
