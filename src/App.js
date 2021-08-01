@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
+import "@fontsource/montserrat";
 import Login from 'pages/Login';
 import Profile from 'pages/Profile';
 import colors from 'assets/colors';
@@ -33,6 +34,13 @@ const theme = createMuiTheme({
       success: {
         main: '#04724D'
       }
+  },
+  overrides: {
+    MuiFormControlLabel: {
+      label: {
+        fontFamily: "Montserrat"
+      }
+    }
   }
 });
 

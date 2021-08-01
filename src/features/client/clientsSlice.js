@@ -266,12 +266,18 @@ const clientsSlice = createSlice({
             state.clientStatus.parts = 'loading';
         },
         [getClientParts.fulfilled]: (state, { payload }) => { 
-            let formattedInfo = [ ];
-            formattedInfo.push(_.groupBy(payload[0], 'programTable'));
-            formattedInfo.push(_.groupBy(payload[1], 'programTable'));
-            formattedInfo.push(_.groupBy(payload[2], 'programTable'));
-            formattedInfo.push(_.groupBy(payload[3], 'programTable'));
-            formattedInfo.push(_.groupBy(payload[4], 'programTable'));
+            let formattedInfo = { 
+                Carpet: {},
+                Countertop: {},
+                Tile: {},
+                Vinyl: {},
+                Wood: {}
+            };
+            formattedInfo.Tile = _.groupBy(payload[0], 'programTable');
+            formattedInfo.Wood = _.groupBy(payload[1], 'programTable');
+            formattedInfo.Carpet = _.groupBy(payload[2], 'programTable');
+            formattedInfo.Countertop = _.groupBy(payload[3], 'programTable');
+            formattedInfo.Vinyl = _.groupBy(payload[4], 'programTable');
 
             state.clientStatus.parts = 'succeeded';
             state.selected.parts = formattedInfo;
